@@ -1,14 +1,16 @@
 import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
+import { Box } from "@mui/material";
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
   width: 300,
-  height: 100,
+  height: "auto",
   padding: theme.spacing(2),
   ...theme.typography.body2,
   textAlign: "center",
@@ -17,7 +19,7 @@ const DemoPaper = styled(Paper)(({ theme }) => ({
 
 export const PostDetails = (props) => {
   return (
-    <Stack direction="row" spacing={2} sx={{ mt: 2, position: "relative" }}>
+    <Stack direction="column" spacing={2} sx={{ mt: 2, position: "relative" }}>
       <DemoPaper square={false}>
         <IconButton
           aria-label="close"
@@ -37,6 +39,12 @@ export const PostDetails = (props) => {
         <Typography variant="body2">ID: {props.id}</Typography>
         <Typography variant="body2">Title: {props.title}</Typography>
         <Typography variant="body2">Author: {props.author}</Typography>
+        <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">
+          <Button variant="outlined">Edit</Button>
+          <Button variant="outlined" color="error">
+            Delete
+          </Button>
+        </Box>
       </DemoPaper>
     </Stack>
   );
