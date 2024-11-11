@@ -1,10 +1,10 @@
 import './App.css'
-import Clock from './Clock'
+import Dashboard from './components/Dashboard'
 function App() {
 
   return (
     <>
-      <Clock></Clock>
+      <Dashboard/>
     </>
   )
 }
