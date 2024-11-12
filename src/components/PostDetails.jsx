@@ -1,4 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
+import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
@@ -6,7 +7,6 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
-import { Box } from "@mui/material";
 
 const DemoPaper = styled(Paper)(({ theme }) => ({
   width: 300,
@@ -36,9 +36,9 @@ export const PostDetails = (props) => {
         <Typography variant="h5" color="inherit" component="div">
           Post Details
         </Typography>
-        <Typography variant="body2">ID: {props.id}</Typography>
-        <Typography variant="body2">Title: {props.title}</Typography>
-        <Typography variant="body2">Author: {props.author}</Typography>
+        <Typography variant="body2">ID: {props.post.id}</Typography>
+        <Typography variant="body2">Title: {props.post.title}</Typography>
+        <Typography variant="body2">Author: {props.post.author}</Typography>
         <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">
           <Button variant="outlined">Edit</Button>
           <Button variant="outlined" color="error">
@@ -51,8 +51,10 @@ export const PostDetails = (props) => {
 };
 
 PostDetails.propTypes = {
-  id: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
+  post: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+  }).isRequired,
   handleCardClose: PropTypes.func.isRequired,
 };
