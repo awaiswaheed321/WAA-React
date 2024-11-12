@@ -8,11 +8,7 @@ const Post = (props) => {
         <Card
             sx={{minWidth: 290}}
             onClick={() => {
-                props.handleCardClick({
-                    id: props.id,
-                    title: props.title,
-                    author: props.author,
-                });
+                props.handleCardClick(props.id);
             }}
         >
             <CardContent>

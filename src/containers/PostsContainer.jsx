@@ -1,6 +1,6 @@
 import {Box} from "@mui/material";
 import PropTypes from "prop-types";
-import Post from "./Post";
+import Post from "../components/Post.jsx";
 
 export const PostsContainer = (props) => {
     const postList = props.posts.map((p) => (
