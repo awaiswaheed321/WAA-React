@@ -49,6 +49,7 @@ const Dashboard = () => {
     }
     if (newName === null || newName === "") {
       alert("Input a new Name for post with ID: " + selectedPost);
+      return;
     }
     const index = posts.findIndex((p) => p.id === selectedPost);
     const updatedPosts = [...posts];
