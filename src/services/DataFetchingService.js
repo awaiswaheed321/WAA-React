@@ -3,7 +3,8 @@ import axios from "axios";
 const BASE_URL = "http://localhost:8080/api/v1";
 
 const ApiUrls = Object.freeze({
-    POSTS: `${BASE_URL}/post`
+    POSTS: `${BASE_URL}/post`,
+    CREATE_POST: `${BASE_URL}/user/1/post`,
 });
 
 // Create an Axios instance for easier reuse and configuration
@@ -36,4 +37,8 @@ function deletePost(id) {
     return handleRequest(axiosInstance.delete(`${ApiUrls.POSTS}/${id}`));
 }
 
-export default { getAllPosts, getPost, deletePost };
+function createPost(post) {
+    return handleRequest(axiosInstance.post(ApiUrls.CREATE_POST, post));
+}
+
+export default { getAllPosts, getPost, deletePost, createPost };

@@ -1,6 +1,7 @@
 import {Box} from "@mui/material";
 import PropTypes from "prop-types";
 import Post from "../components/Post.jsx";
+import Typography from "@mui/material/Typography";
 
 export const PostsContainer = (props) => {
     const postList = props.posts.map((p) => (
@@ -14,8 +15,13 @@ export const PostsContainer = (props) => {
     ));
 
     return (
-        <Box display="flex" flexWrap="wrap" gap={2}>
-            {postList}
+        <Box sx={{ marginTop: 2 }}>
+            <Typography variant="h5" color="inherit" component="div" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
+                Posts
+            </Typography>
+            <Box display="flex" flexWrap="wrap" gap={2}>
+                {postList}
+            </Box>
         </Box>
     );
 };

@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import {CommentsContainer} from "../containers/CommentsContainer.jsx";
 
-const DemoPaper = styled(Paper)(({theme}) => ({
+const PostDetailsPaper = styled(Paper)(({theme}) => ({
     width: 300,
     height: "auto",
     padding: theme.spacing(2),
@@ -21,7 +21,7 @@ const DemoPaper = styled(Paper)(({theme}) => ({
 export const PostDetails = (props) => {
     return (
         <Stack direction="column" spacing={2} sx={{mt: 2, position: "relative"}}>
-            <DemoPaper square={false}>
+            <PostDetailsPaper square={false}>
                 <IconButton
                     aria-label="close"
                     onClick={props.handleCardClose}
@@ -50,7 +50,7 @@ export const PostDetails = (props) => {
                         Delete Post
                     </Button>
                 </Box>
-            </DemoPaper>
+            </PostDetailsPaper>
         </Stack>
     );
 };

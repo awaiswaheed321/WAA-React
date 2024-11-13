@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import {PostDetails} from "../components/PostDetails.jsx";
 import {PostsContainer} from "./PostsContainer.jsx";
 import DataFetchingService from "../services/DataFetchingService.js";
+import CreatePost from "../components/CreatePost.jsx";
 
 const Dashboard = () => {
     const [posts, setPosts] = useState([]);
@@ -59,6 +60,8 @@ const Dashboard = () => {
                 </Typography>
             </Toolbar>
         </AppBar>
+
+        <CreatePost fetchPosts={fetchPosts}/>
 
         <PostsContainer posts={posts} handleCardClick={handleCardClick}/>
 
