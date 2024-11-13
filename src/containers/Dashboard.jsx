@@ -12,6 +12,7 @@ const Dashboard = () => {
     const [posts, setPosts] = useState([]);
     const [showPostDetail, setShowPostDetail] = useState(false);
     const [postDetailContent, setPostDetailContent] = useState({});
+    const [showCreatePost, setShowCreatePost] = useState(false);
 
     const fetchPosts = async () => {
         try {
@@ -41,6 +42,7 @@ const Dashboard = () => {
         try {
             const post = await DataFetchingService.getPost(postId);
             setPostDetailContent(post);
+            setShowCreatePost(false);
             setShowPostDetail(true);
         } catch (error) {
             console.error("Error fetching posts:", error);
@@ -52,6 +54,16 @@ const Dashboard = () => {
         setPostDetailContent({});
     };
 
+    const openCreatePost = () => {
+        setShowPostDetail(false);
+        setPostDetailContent({});
+        setShowCreatePost(true);
+    }
+
+    const closeCreatePost = () => {
+        setShowCreatePost(false);
+    }
+
     return (<Box sx={{flexGrow: 1}}>
         <AppBar position="static" sx={{mb: 1.25}}>
             <Toolbar variant="dense">
@@ -61,18 +73,24 @@ const Dashboard = () => {
             </Toolbar>
         </AppBar>
 
-        <CreatePost fetchPosts={fetchPosts}/>
-
-        <PostsContainer posts={posts} handleCardClick={handleCardClick}/>
+        <PostsContainer posts={posts} handleCardClick={handleCardClick} openCreatePost={openCreatePost}/>
 
         {showPostDetail && (<Box sx={{
             display: "flex", justifyContent: "center", alignItems: "center", width: "100%",
         }}
-        > <PostDetails
-            post={postDetailContent}
-            handleCardClose={handleCardClose}
-            handleDeletePost={handleDeletePost}
-        />
+        >
+            <PostDetails
+                post={postDetailContent}
+                handleCardClose={handleCardClose}
+                handleDeletePost={handleDeletePost}
+            />
+        </Box>)}
+
+        {showCreatePost && (<Box sx={{
+            display: "flex", justifyContent: "center", alignItems: "center", width: "100%",
+        }}
+        >
+            <CreatePost fetchPosts={fetchPosts} closeCreatePost={closeCreatePost}/>
         </Box>)}
     </Box>);
 };

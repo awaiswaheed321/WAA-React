@@ -20,7 +20,7 @@ const PostDetailsPaper = styled(Paper)(({theme}) => ({
 
 export const PostDetails = (props) => {
     return (
-        <Stack direction="column" spacing={2} sx={{mt: 2, position: "relative"}}>
+        <Stack direction="column" spacing={2} sx={{position: "relative"}}>
             <PostDetailsPaper square={false}>
                 <IconButton
                     aria-label="close"

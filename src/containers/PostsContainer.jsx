@@ -2,6 +2,7 @@ import {Box} from "@mui/material";
 import PropTypes from "prop-types";
 import Post from "../components/Post.jsx";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 export const PostsContainer = (props) => {
     const postList = props.posts.map((p) => (
@@ -15,10 +16,15 @@ export const PostsContainer = (props) => {
     ));
 
     return (
-        <Box sx={{ marginTop: 2 }}>
-            <Typography variant="h5" color="inherit" component="div" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
-                Posts
-            </Typography>
+        <Box sx={{ marginTop: 2, marginBottom: 2 }}>
+            <Box display="flex" flexWrap="wrap" gap={2} justifyContent="space-between" alignItems="center">
+                <Typography variant="h5" color="inherit" component="div" sx={{ fontWeight: 'bold', marginBottom: 2, marginLeft: 2 }}>
+                    Posts
+                </Typography>
+                <Button variant="outlined" onClick={props.openCreatePost} sx={{marginRight: 2}}>
+                    Create Post
+                </Button>
+            </Box>
             <Box display="flex" flexWrap="wrap" gap={2}>
                 {postList}
             </Box>
@@ -35,4 +41,5 @@ PostsContainer.propTypes = {
         })
     ),
     handleCardClick: PropTypes.func.isRequired,
+    openCreatePost: PropTypes.func.isRequired,
 };
