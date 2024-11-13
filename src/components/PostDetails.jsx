@@ -37,11 +37,14 @@ export const PostDetails = (props) => {
                 <Typography variant="h5" color="inherit" component="div" sx={{fontWeight: 'bold'}}>
                     Post Details
                 </Typography>
-                <Typography variant="body2">ID: {props.post.id}</Typography>
-                <Typography variant="body2">Title: {props.post.title}</Typography>
-                <Typography variant="body2">Author: {props.post.author}</Typography>
-                <Typography variant="body2">Content: {props.post.content}</Typography>
-                <Typography variant="h6" sx={{fontWeight: 'bold'}}>Comments</Typography>
+                <Box sx={{width: "100%", overflowWrap: "break-word"}}>
+                    <Typography variant="body2"><strong>ID:</strong> {props.post.id}</Typography>
+                    <Typography variant="body2"><strong>Title:</strong> {props.post.title}</Typography>
+                    <Typography variant="body2"><strong>Author:</strong> {props.post.author}</Typography>
+                    <Typography variant="body2"><strong>Content:</strong> {props.post.content}</Typography>
+                    <Typography variant="h6" sx={{fontWeight: 'bold'}}>Comments</Typography>
+                </Box>
+
                 {(props.post.comments !== null && props.post.comments.length > 0) ?
                     <CommentsContainer comments={props.post.comments}/>
                     : <Typography variant="body2" sx={{fontWeight: 'bold'}}>WOW, Such Empty</Typography>}
