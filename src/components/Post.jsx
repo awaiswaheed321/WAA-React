@@ -6,32 +6,30 @@ import {Chip} from "@mui/material";
 import Box from "@mui/material/Box";
 
 const Post = (props) => {
-    return (
-        <Card
-            sx={{minWidth: 290, maxWidth: 290}}
-            onClick={() => {
-                props.handleCardClick(props.id);
-            }}
-        >
-            <CardContent>
-                <Box position="relative">
-                    <Chip
-                        label={`ID: ${props.id}`}
-                        color="primary"
-                        sx={{position: "absolute", top: 0, right: 0}}
-                    />
-                    <Box sx={{width: "100%", overflowWrap: "break-word"}}>
-                        <Typography variant="body2" sx={{paddingRight:"60px"}}>
-                            <strong>Title:</strong> {props.title}
-                        </Typography>
-                        <Typography variant="body2">
-                            <strong>Author:</strong> {props.author}
-                        </Typography>
-                    </Box>
+    return (<Card
+        sx={{minWidth: 290, maxWidth: 290}}
+        onClick={() => {
+            props.handleCardClick(props.id);
+        }}
+    >
+        <CardContent>
+            <Box position="relative">
+                <Chip
+                    label={`ID: ${props.id}`}
+                    color="primary"
+                    sx={{position: "absolute", top: 0, right: 0}}
+                />
+                <Box sx={{width: "100%", overflowWrap: "break-word"}}>
+                    <Typography variant="body2" sx={{paddingRight: "60px"}}>
+                        <strong>Title:</strong> {props.title}
+                    </Typography>
+                    <Typography variant="body2">
+                        <strong>Author:</strong> {props.author}
+                    </Typography>
                 </Box>
-            </CardContent>
-        </Card>
-    );
+            </Box>
+        </CardContent>
+    </Card>);
 };
 
 Post.propTypes = {

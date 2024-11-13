@@ -5,9 +5,7 @@ export const Comment = (props) => {
     return (<ListItem
         alignItems="flex-start"
         sx={{
-            paddingTop: 0.5,
-            paddingBottom: 0.5,
-            minHeight: '30px'
+            paddingTop: 0.5, paddingBottom: 0.5, minHeight: '30px'
         }}
     >
         <ListItemText
@@ -19,6 +17,5 @@ export const Comment = (props) => {
 }
 
 Comment.propTypes = {
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired, name: PropTypes.string.isRequired,
 }
