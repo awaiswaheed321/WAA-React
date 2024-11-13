@@ -68,7 +68,7 @@ const Dashboard = () => {
         <AppBar position="static" sx={{mb: 1.25}}>
             <Toolbar variant="dense">
                 <Typography variant="h6" color="inherit" component="div">
-                    WAA - Lab 6
+                    WAA - Lab 7
                 </Typography>
             </Toolbar>
         </AppBar>
