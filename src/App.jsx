@@ -1,10 +1,10 @@
 import './App.css'
-import UseMemoComponent from "./UseMemoComponent.jsx";
+import UseCallbackComponent from "./UseCallbackComponent.jsx";
 
 function App() {
     return (<>
         {/*<Clock></Clock>*/}
-        <UseMemoComponent/>
+        <UseCallbackComponent/>
     </>)
 }
 
