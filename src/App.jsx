@@ -1,10 +1,10 @@
 import './App.css'
-import ReducerComponent from "./ReducerComponent.jsx";
+import UseMemoComponent from "./UseMemoComponent.jsx";
 
 function App() {
     return (<>
         {/*<Clock></Clock>*/}
-        <ReducerComponent/>
+        <UseMemoComponent/>
     </>)
 }
 
