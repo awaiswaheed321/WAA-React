@@ -1,12 +1,11 @@
 import './App.css'
-import Clock from './Clock'
-function App() {
+import ReducerComponent from "./ReducerComponent.jsx";
 
-  return (
-    <>
-      <Clock></Clock>
-    </>
-  )
+function App() {
+    return (<>
+        {/*<Clock></Clock>*/}
+        <ReducerComponent/>
+    </>)
 }
 
 export default App
