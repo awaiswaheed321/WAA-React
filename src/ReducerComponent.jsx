@@ -1,33 +1,33 @@
 import {useReducer} from "react";
 
-const ReducerComponent = () => {
-    const initialState = {count: 0, error: null}
+const initialState = {count: 0, error: null}
 
-    const reducer = (state, action) => {
-        switch (action.type) {
-            case "increment": {
-                const newValue = state.count + 1;
-                const hasError = newValue > 5;
-                return {
-                    ...state, count: hasError ? state.count : newValue, error: hasError ? "Maximum Reached" : null
-                }
-            }
-            case "decrement": {
-                const newValue = state.count - 1;
-                const hasError = newValue < 0;
-                return {
-                    ...state, count: hasError ? state.count : newValue, error: hasError ? "Minimum Reached" : null
-                }
-            }
-            case "reset": {
-                return {count: 0, error: null}
-            }
-            default: {
-                return state;
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "increment": {
+            const newValue = state.count + 1;
+            const hasError = newValue > 5;
+            return {
+                ...state, count: hasError ? state.count : newValue, error: hasError ? "Maximum Reached" : null
             }
         }
+        case "decrement": {
+            const newValue = state.count - 1;
+            const hasError = newValue < 0;
+            return {
+                ...state, count: hasError ? state.count : newValue, error: hasError ? "Minimum Reached" : null
+            }
+        }
+        case "reset": {
+            return {count: 0, error: null}
+        }
+        default: {
+            return state;
+        }
     }
+}
 
+const ReducerComponent = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
     return (<div>
         <h2>Count: {state.count}</h2>
