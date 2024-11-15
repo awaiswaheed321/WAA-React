@@ -7,9 +7,9 @@ import Stack from "@mui/material/Stack";
 import {styled} from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import {CommentsContainer} from "../containers/CommentsContainer.jsx";
-import React, {useContext, useEffect, useState} from "react";
-import {StatesContext} from "../contexts/StatesContext.js";
+import React, {useEffect, useState} from "react";
 import DataFetchingService from "../services/DataFetchingService.js";
+import PropTypes from 'prop-types';
 
 const PostDetailsPaper = styled(Paper)(({theme}) => ({
     width: 300,
@@ -19,17 +19,13 @@ const PostDetailsPaper = styled(Paper)(({theme}) => ({
     marginTop: 10,
 }));
 
-const PostDetails = () => {
-    const {
-        selectedPost, setShowPostDetail, setSelectedPost, incrementSetUpdatePosts
-    } = useContext(StatesContext);
-
+const PostDetails = (props) => {
     const [post, setPost] = useState(null);
 
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const post = await DataFetchingService.getPost(selectedPost);
+                const post = await DataFetchingService.getPost(props.selectedPost);
                 setPost(post);
             } catch (error) {
                 console.error("Error fetching posts:", error);
@@ -37,22 +33,22 @@ const PostDetails = () => {
         };
 
         fetchPost().then();
-    }, [selectedPost]);
+    }, [props.selectedPost]);
 
     const handleDeletePost = async (id) => {
         try {
             await DataFetchingService.deletePost(id);
             alert("Successfully deleted");
-            incrementSetUpdatePosts();
-            setShowPostDetail(false);
+            props.fetchPosts();
+            props.setShowPostDetail(false);
         } catch (error) {
             console.log(error);
         }
     }
 
     const handleCardClose = () => {
-        setShowPostDetail(false);
-        setSelectedPost(null);
+        props.setShowPostDetail(false);
+        props.setSelectedPost(null);
     };
 
     return (<Stack direction="column" spacing={2} sx={{position: "relative"}}>
@@ -86,6 +82,13 @@ const PostDetails = () => {
             </Box>
         </PostDetailsPaper>}
     </Stack>);
+};
+
+PostDetails.propTypes = {
+    selectedPost: PropTypes.number.isRequired,
+    setShowPostDetail: PropTypes.func.isRequired,
+    setSelectedPost: PropTypes.func.isRequired,
+    fetchPosts: PropTypes.func.isRequired
 };
 
 export default React.memo(PostDetails);
