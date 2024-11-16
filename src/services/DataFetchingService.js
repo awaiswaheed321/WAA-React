@@ -22,8 +22,12 @@ const handleRequest = (request) =>
         });
 
 // Function to get all posts
-function getAllStudents() {
-    return handleRequest(axiosInstance.get(ApiUrls.STUDENTS));
+function getAllStudents(params) {
+    return handleRequest(
+        axiosInstance.get(ApiUrls.STUDENTS, {
+            params: params,
+        }),
+    );
 }
 
 // Function to get a single post by ID
