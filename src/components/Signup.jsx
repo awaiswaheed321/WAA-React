@@ -1,6 +1,4 @@
-import React, { useRef, useState } from 'react';
 import {
-    Alert,
     AppBar,
     Box,
     Button,
@@ -9,27 +7,22 @@ import {
     FormControl,
     FormControlLabel,
     Grid,
-    IconButton,
     Radio,
     RadioGroup,
-    Slide,
-    Snackbar,
     TextField,
     Toolbar,
     Typography,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import DataService from '/src/services/DataService.js';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AuthApi from '../services/AuthApi.js';
+import useSnackStore from '../store/SnackStore.js';
+import CustomSnackBar from './CustomSnackBar.jsx';
 import Footer from './Footer.jsx';
 
-const Signup = () => {
+const SignUp = () => {
     const formRef = useRef(null);
-    const [snackProps, setSnackProps] = useState({
-        open: false,
-        message: '',
-        severity: 'info',
-    });
+    const { openSnackBar } = useSnackStore();
     const navigate = useNavigate();
 
     const handleSubmit = () => {
@@ -44,48 +37,53 @@ const Signup = () => {
         };
 
         if (!formData.firstName) {
-            openSnackbar('First name is required.', 'error');
+            openSnackBar('First name is required.', 'error');
             return;
         }
         if (!formData.lastName) {
-            openSnackbar('Last name is required.', 'error');
+            openSnackBar('Last name is required.', 'error');
             return;
         }
         if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
-            openSnackbar('Enter a valid email address.', 'error');
+            openSnackBar('Enter a valid email address.', 'error');
             return;
         }
         if (!formData.password || formData.password.length < 8) {
-            openSnackbar('Password must be at least 8 characters.', 'error');
+            openSnackBar('Password must be at least 8 characters.', 'error');
             return;
         }
         if (formData.password !== formData.confirmPassword) {
-            openSnackbar('Passwords do not match.', 'error');
+            openSnackBar('Passwords do not match.', 'error');
             return;
         }
         const newFormData = { ...formData };
         delete newFormData.confirmPassword;
-        handleSignup(newFormData).then();
+        handleSignUp(newFormData).then();
     };
 
-    const openSnackbar = (message, severity) => {
-        console.log('open snackbar');
-        setSnackProps({
-            message: message,
-            open: true,
-            severity: severity,
-        });
+    const handleSignUp = async (data) => {
+        const res = await AuthApi.signup(data);
+        if (!res.ok) {
+            const error = await res.json();
+            openSnackBar(error.message, 'error');
+        } else {
+            const success = await res.json();
+            openSnackBar(generateWelcomeMessage(success), 'success');
+            resetForm();
+            await delay(2000);
+            navigate('/login');
+        }
     };
 
-    const handleSignup = async (data) => {
-        console.log('Signup Data:', data);
-        try {
-            const res = await DataService.signup(data);
-            openSnackbar(generateWelcomeMessage(res), 'success');
-            await delay(3000);
-            navigate('/');
-        } catch (error) {
-            openSnackbar(error.message, 'error');
+    const resetForm = () => {
+        if (formRef.current) {
+            const formElements = formRef.current.elements;
+            formElements.firstName.value = '';
+            formElements.lastName.value = '';
+            formElements.email.value = '';
+            formElements.password.value = '';
+            formElements.confirmPassword.value = '';
+            formElements.role.value = 'BUYER';
         }
     };
 
@@ -98,31 +96,6 @@ const Signup = () => {
         return `🎉 Congrats, ${firstName} ${lastName}! You're registered. Redirecting to the signup page... 🚀`;
     };
 
-    const handleSnackBarClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackProps({ ...snackProps, open: false, message: '', severity: 'info' });
-    };
-
-
-    const action = (
-        <React.Fragment>
-            <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleSnackBarClose}
-            >
-                <CloseIcon fontSize="small" />
-            </IconButton>
-        </React.Fragment>
-    );
-
-    function SlideTransition(props) {
-        return <Slide {...props} direction="up" />;
-    }
-
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <AppBar position="static" sx={{ bgcolor: '#1D2D44' }}>
@@ -130,7 +103,13 @@ const Signup = () => {
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                         MarketPlace Pro
                     </Typography>
-                    <Button color="inherit" sx={{bgcolor: '#748CAB'}}>Login</Button>
+                    <Button
+                        color="inherit"
+                        sx={{ bgcolor: '#748CAB' }}
+                        onClick={() => navigate('/login')}
+                    >
+                        Login
+                    </Button>
                 </Toolbar>
             </AppBar>
             <Box
@@ -193,7 +172,10 @@ const Signup = () => {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <FormControl fullWidth sx={{ marginBottom: 1 }}>
+                                    <FormControl
+                                        fullWidth
+                                        sx={{ marginBottom: 1 }}
+                                    >
                                         <Typography variant="subtitle1" mb={1}>
                                             Sign up as:
                                         </Typography>
@@ -221,9 +203,9 @@ const Signup = () => {
                                         variant="contained"
                                         color="primary"
                                         onClick={handleSubmit}
-                                        sx={{bgcolor: '#748CAB'}}
+                                        sx={{ bgcolor: '#748CAB' }}
                                     >
-                                        Signup
+                                        SIGN UP
                                     </Button>
                                 </Grid>
                                 <Grid item xs={12}>
@@ -232,7 +214,7 @@ const Signup = () => {
                                         variant="contained"
                                         color="primary"
                                         onClick={() => navigate('/')}
-                                        sx={{bgcolor: '#748CAB'}}
+                                        sx={{ bgcolor: '#748CAB' }}
                                     >
                                         Homepage
                                     </Button>
@@ -242,27 +224,11 @@ const Signup = () => {
                     </CardContent>
                 </Card>
 
-                <Snackbar
-                    open={snackProps.open}
-                    onClose={handleSnackBarClose}
-                    action={action}
-                    TransitionComponent={SlideTransition}
-                    autoHideDuration={3000}
-                >
-                    <Alert
-                        onClose={handleSnackBarClose}
-                        severity={snackProps.severity}
-                        variant="filled"
-                        sx={{ width: '100%' }}
-                    >
-                        {snackProps.message}
-                    </Alert>
-                </Snackbar>
+                <CustomSnackBar />
             </Box>
             <Footer />
         </Box>
     );
-
 };
 
-export default Signup;
+export default SignUp;
