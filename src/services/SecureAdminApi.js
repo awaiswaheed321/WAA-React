@@ -49,4 +49,13 @@ async function rejectSeller(token, id) {
     return await makeApiCall('DELETE', url, {}, null, token);
 }
 
-export default { getPendingSellers, approveSeller, rejectSeller };
+async function getReviews(token) {
+    return await makeApiCall('GET', ApiUrls.REVIEW, {}, null, token);
+}
+
+async function deleteReview(token, id) {
+    const url = `${ApiUrls.REVIEW}/${id}`;
+    return await makeApiCall('DELETE', url, {}, null, token);
+}
+
+export default { getPendingSellers, approveSeller, rejectSeller, deleteReview, getReviews };

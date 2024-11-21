@@ -1,9 +1,11 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
+import WavingHandRoundedIcon from '@mui/icons-material/WavingHandRounded';
 import {
     AppBar,
     Box,
     Button,
+    ClickAwayListener,
     CssBaseline,
     Drawer,
     IconButton,
@@ -25,7 +27,8 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const toggleDrawer = () => {
+    const toggleDrawer = (event) => {
+        event.stopPropagation();
         setIsDrawerOpen(!isDrawerOpen);
     };
 
@@ -35,8 +38,13 @@ const Dashboard = () => {
     };
 
     const handleDrawerItemClick = () => {
-        // Close the drawer when an item is clicked
         setIsDrawerOpen(false);
+    };
+
+    const handleClickAway = () => {
+        if (isDrawerOpen) {
+            setIsDrawerOpen(false);
+        }
     };
 
     return (
@@ -77,51 +85,69 @@ const Dashboard = () => {
                 </Toolbar>
             </AppBar>
             <Box sx={{ display: 'flex', flexGrow: 1, pt: 8 }}>
-                <Drawer
-                    // variant="persistent"
-                    open={isDrawerOpen}
-                    sx={{
-                        width: isDrawerOpen ? drawerWidth : 0,
-                        flexShrink: 0,
-                        [`& .MuiDrawer-paper`]: {
-                            width: drawerWidth,
-                            boxSizing: 'border-box',
-                            position: isDrawerOpen ? 'relative' : 'absolute',
-                            visibility: isDrawerOpen ? 'visible' : 'hidden',
-                            transition: 'width 0.3s ease, visibility 0.3s ease',
-                        },
+                <ClickAwayListener
+                    onClickAway={(event) => {
+                        if (
+                            isDrawerOpen &&
+                            event.target.closest('.MuiDrawer-paper')
+                        ) {
+                            return;
+                        }
+                        handleClickAway();
                     }}
                 >
-                    <Toolbar />
-                    <Box sx={{ overflow: 'auto' }}>
-                        <List>
-                            <ListItem
-                                button
-                                component={Link}
-                                to=""
-                                onClick={handleDrawerItemClick}
-                            >
-                                <ListItemIcon>
-                                    <PersonAddRoundedIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Welcome" />
-                            </ListItem>
-                        </List>
-                        <List>
-                            <ListItem
-                                button
-                                component={Link}
-                                to="pending-sellers"
-                                onClick={handleDrawerItemClick}
-                            >
-                                <ListItemIcon>
-                                    <PersonAddRoundedIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Pending Sellers" />
-                            </ListItem>
-                        </List>
-                    </Box>
-                </Drawer>
+                    <Drawer
+                        open={isDrawerOpen}
+                        sx={{
+                            width: isDrawerOpen ? drawerWidth : 0,
+                            flexShrink: 0,
+                            [`& .MuiDrawer-paper`]: {
+                                width: drawerWidth,
+                                boxSizing: 'border-box',
+                                transition: 'width 0.3s ease',
+                            },
+                        }}
+                    >
+                        <Toolbar />
+                        <Box sx={{ overflow: 'auto' }}>
+                            <List>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to=""
+                                    onClick={handleDrawerItemClick}
+                                >
+                                    <ListItemIcon>
+                                        <WavingHandRoundedIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Welcome" />
+                                </ListItem>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to="pending-sellers"
+                                    onClick={handleDrawerItemClick}
+                                >
+                                    <ListItemIcon>
+                                        <PersonAddRoundedIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Pending Sellers" />
+                                </ListItem>
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to="admin-reviews"
+                                    onClick={handleDrawerItemClick}
+                                >
+                                    <ListItemIcon>
+                                        <PersonAddRoundedIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Reviews" />
+                                </ListItem>
+                            </List>
+                        </Box>
+                    </Drawer>
+                </ClickAwayListener>
                 <Box
                     component="main"
                     sx={{
@@ -131,6 +157,7 @@ const Dashboard = () => {
                         transition: 'margin-left 0.3s ease',
                         display: 'flex',
                         flexDirection: 'column',
+                        marginLeft: isDrawerOpen ? `${drawerWidth}px` : '0px',
                     }}
                 >
                     <Outlet />

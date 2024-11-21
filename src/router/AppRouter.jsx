@@ -7,6 +7,7 @@ import PrivateRoute from './PrivateRouter.jsx';
 import Dashboard from '../containers/Dashboard.jsx';
 import PendingSellerContainer from '../containers/PendingSellerContainer.jsx';
 import DashboardLanding from '../components/DashboardLanding.jsx';
+import AdminReviewContainer from '../containers/AdminReviewContainer.jsx';
 
 export const AppRouter = createBrowserRouter([
     {
@@ -31,7 +32,7 @@ export const AppRouter = createBrowserRouter([
         children: [
             { path: '', element: <DashboardLanding /> },
             { path: 'pending-sellers', element: <PendingSellerContainer /> },
-            // { path: 'component-b', element: <ComponentB /> },
+            { path: 'admin-reviews', element: <AdminReviewContainer /> },
             // { path: 'component-c', element: <ComponentC /> },
             // { path: 'component-d', element: <ComponentD /> },
         ],

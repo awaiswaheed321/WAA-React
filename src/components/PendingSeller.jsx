@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
 import SecureAdminApi from '../services/SecureAdminApi';
 import useSnackStore from '../store/SnackStore.js';
+import CustomSnackBar from './CustomSnackBar.jsx';
 
 export default function PendingSeller(props) {
     const { openSnackBar } = useSnackStore();
@@ -21,6 +22,7 @@ export default function PendingSeller(props) {
             );
             if (res.ok) {
                 openSnackBar('Approved Successfully', 'success');
+                await delay(1000);
                 props.fetchSellers();
             } else if (res.status === 403) {
                 await handle403();
@@ -41,6 +43,7 @@ export default function PendingSeller(props) {
             );
             if (res.ok) {
                 openSnackBar('Rejected Successfully', 'success');
+                await delay(1000);
                 props.fetchSellers();
             } else if (res.status === 403) {
                 await handle403();
@@ -108,6 +111,7 @@ export default function PendingSeller(props) {
                     </Box>
                 </CardContent>
             </Card>
+            <CustomSnackBar />
         </div>
     );
 }
