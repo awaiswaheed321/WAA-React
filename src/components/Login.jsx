@@ -42,7 +42,6 @@ const Login = () => {
 
     const handleLogin = async (data) => {
         const res = await AuthApi.login(data);
-        console.log(res);
         if (!res.ok) {
             const error = await res.json();
             openSnackBar(error.message, 'error');
@@ -50,7 +49,6 @@ const Login = () => {
             openSnackBar('Login Successful', 'success');
 
             const body = await res.json();
-            console.log('Body: ', body);
             setAllCookies(body.accessToken, body.refreshToken, body.user);
             navigate('/dashboard');
         }

@@ -15,12 +15,6 @@ async function makeApiCall(
     body = null,
     accessToken = null,
 ) {
-    console.log('HTTP Method:', method);
-    console.log('URL:', url);
-    console.log('Query Parameters:', params);
-    console.log('Request Body:', body);
-    console.log('Access Token:', accessToken);
-
     const fullUrl = new URL(url);
     Object.keys(params).forEach((key) =>
         fullUrl.searchParams.append(key, params[key]),
@@ -42,13 +36,17 @@ async function makeApiCall(
 }
 
 async function getPendingSellers(token) {
-    return await makeApiCall(
-        'GET',
-        ApiUrls.PENDING_SELLERS,
-        {},
-        null,
-        token,
-    );
+    return await makeApiCall('GET', ApiUrls.PENDING_SELLERS, {}, null, token);
 }
 
-export default { getPendingSellers };
+async function approveSeller(token, id) {
+    const url = `${ApiUrls.SELLER}${id}${ApiUrls.APPROVE}`;
+    return await makeApiCall('PUT', url, {}, null, token);
+}
+
+async function rejectSeller(token, id) {
+    const url = `${ApiUrls.SELLER}${id}${ApiUrls.REJECT}`;
+    return await makeApiCall('DELETE', url, {}, null, token);
+}
+
+export default { getPendingSellers, approveSeller, rejectSeller };

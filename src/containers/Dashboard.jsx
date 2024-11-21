@@ -23,7 +23,7 @@ const drawerWidth = 240;
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);

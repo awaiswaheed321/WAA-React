@@ -2,7 +2,6 @@ import { Box, Typography, Card, CardContent } from '@mui/material';
 import { getUserCookie } from '../cookies/AuthCookie';
 
 const DashboardLanding = () => {
-    console.log(getUserCookie());
     const role = getUserCookie().role;
 
     return (

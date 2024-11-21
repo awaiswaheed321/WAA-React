@@ -9,18 +9,14 @@ import { getAccessToken } from '../cookies/AuthCookie.js';
 
 function PendingSellerContainer() {
     const [sellers, setSellers] = useState([]);
-    const { openSnackBar, resetSnackProps } = useSnackStore();
+    const { openSnackBar } = useSnackStore();
     const navigate = useNavigate();
-    console.log("Container:", getAccessToken());
 
     const fetchSellers = async () => {
         try {
-            console.log("Func:", getAccessToken());
             const res = await SecureAdminApi.getPendingSellers(getAccessToken());
-            console.log(res);
             if (res.ok) {
                 const body = await res.json();
-                console.log(body);
                 setSellers(body);
             } else if (res.status === 403) {
                 openSnackBar('Your session has expired', 'error');
@@ -43,6 +39,7 @@ function PendingSellerContainer() {
             firstName={p.firstName}
             lastName={p.lastName}
             email={p.email}
+            fetchSellers={fetchSellers}
         />
     ));
 
@@ -51,14 +48,8 @@ function PendingSellerContainer() {
     }
 
     useEffect(() => {
-        return () => {
-            resetSnackProps();
-        };
-    }, []);
-
-    useEffect(() => {
         fetchSellers().then();
-    });
+    }, []);
 
     return (
         <div>

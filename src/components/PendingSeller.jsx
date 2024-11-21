@@ -4,15 +4,65 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
+import SecureAdminApi from '../services/SecureAdminApi';
+import useSnackStore from '../store/SnackStore.js';
 
 export default function PendingSeller(props) {
-    const handleReject = () => {
-        console.log('Rejected');
+    const { openSnackBar } = useSnackStore();
+    const navigate = useNavigate();
+
+    const handleApprove = async () => {
+        try {
+            const res = await SecureAdminApi.approveSeller(
+                getAccessToken(),
+                props.id,
+            );
+            if (res.ok) {
+                openSnackBar('Approved Successfully', 'success');
+                props.fetchSellers();
+            } else if (res.status === 403) {
+                await handle403();
+            } else {
+                const body = await res.body();
+                openSnackBar(body.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error Approving Seller:', error);
+        }
     };
 
-    const handleApprove = () => {
-        console.log('Approved');
+    const handleReject = async () => {
+        try {
+            const res = await SecureAdminApi.rejectSeller(
+                getAccessToken(),
+                props.id,
+            );
+            if (res.ok) {
+                openSnackBar('Rejected Successfully', 'success');
+                props.fetchSellers();
+            } else if (res.status === 403) {
+                await handle403();
+            } else {
+                const body = await res.body();
+                openSnackBar(body.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error Rejecting Seller:', error);
+        }
     };
+
+    const handle403 = async () => {
+        openSnackBar('Your session has expired', 'error');
+        await delay(2000);
+        deleteAllCookies();
+        navigate('/');
+    };
+
+    function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
     return (
         <div>
@@ -67,4 +117,5 @@ PendingSeller.propTypes = {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     email: PropTypes.number.isRequired,
+    fetchSellers: PropTypes.func.isRequired,
 };
