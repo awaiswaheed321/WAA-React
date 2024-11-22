@@ -1,7 +1,12 @@
-import { Link } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { getAccessToken } from '../../cookies/AuthCookie';
 
 export default function NotFound() {
+    const isAuthenticated = !!getAccessToken();
+    const redirectPath = isAuthenticated ? '/dashboard' : '/';
+    const buttonText = isAuthenticated ? 'Go to Dashboard' : 'Go Back to Home';
+
     return (
         <Box
             display="flex"
@@ -26,10 +31,10 @@ export default function NotFound() {
                 variant="contained"
                 color="primary"
                 component={Link}
-                to="/"
+                to={redirectPath}
                 sx={{ mt: 2 }}
             >
-                Go Back to Home
+                {buttonText}
             </Button>
         </Box>
     );

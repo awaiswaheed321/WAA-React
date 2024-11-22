@@ -1,18 +1,19 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Login from '../components/auth/Login.jsx';
-import NotFound from '../components/base/NotFound.jsx';
 import SignUp from '../components/auth/SignUp.jsx';
+import NotFound from '../components/base/NotFound.jsx';
 import WelcomePage from '../components/dashboard/WelcomePage.jsx';
-import PrivateRoute from './PrivateRouter.jsx';
-import Dashboard from '../containers/DashboardContainer.jsx';
-import PendingSellerContainer from '../containers/PendingSellerContainer.jsx';
-import DashboardLanding from '../components/dashboard/DashboardLanding.jsx';
-import AdminReviewContainer from '../containers/AdminReviewContainer.jsx';
 import CreateProduct from '../components/seller/CreateProduct.jsx';
-import SellerProductContainer from '../containers/SellerProductContainer.jsx';
 import SellerProductDetail from '../components/seller/SellerProductDetail.jsx';
 import UpdateProduct from '../components/seller/UpdateProduct.jsx';
+import UserRole from '../constants/UserRoles.js';
+import AdminReviewContainer from '../containers/AdminReviewContainer.jsx';
+import Dashboard from '../containers/DashboardContainer.jsx';
+import PendingSellerContainer from '../containers/PendingSellerContainer.jsx';
 import SellerOrderContainer from '../containers/SellerOrderContainer.jsx';
+import SellerProductContainer from '../containers/SellerProductContainer.jsx';
+import PrivateRoute from './PrivateRouter.jsx';
+import DashboardLanding from '../components/dashboard/DashboardLanding.jsx'
 
 export const AppRouter = createBrowserRouter([
     {
@@ -30,19 +31,74 @@ export const AppRouter = createBrowserRouter([
     {
         path: '/dashboard',
         element: (
-            <PrivateRoute>
+            <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.SELLER]}>
                 <Dashboard />
             </PrivateRoute>
         ),
         children: [
-            { path: '', element: <DashboardLanding /> },
-            { path: 'pending-sellers', element: <PendingSellerContainer /> },
-            { path: 'admin-reviews', element: <AdminReviewContainer /> },
-            { path: 'create-product', element: <CreateProduct /> },
-            { path: 'seller-products', element: <SellerProductContainer /> },
-            { path: 'seller-products/:id', element: <SellerProductDetail /> },
-            { path: 'seller-products/update/:id', element: <UpdateProduct /> },
-            { path: 'seller-orders', element: <SellerOrderContainer /> },
+            { path: '', element: (
+                <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.SELLER, UserRole.BUYER]}>
+                    <DashboardLanding />
+                </PrivateRoute>
+            ) },
+            // Admin Routes
+            {
+                path: 'admin-reviews',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
+                        <AdminReviewContainer />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'pending-sellers',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
+                        <PendingSellerContainer />
+                    </PrivateRoute>
+                ),
+            },
+            // Seller Routes
+            {
+                path: 'create-product',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.SELLER]}>
+                        <CreateProduct />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'seller-products',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.SELLER]}>
+                        <SellerProductContainer />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'seller-products/:id',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.SELLER]}>
+                        <SellerProductDetail />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'seller-products/update/:id',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.SELLER]}>
+                        <UpdateProduct />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'seller-orders',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.SELLER]}>
+                        <SellerOrderContainer />
+                    </PrivateRoute>
+                ),
+            },
         ],
     },
     {

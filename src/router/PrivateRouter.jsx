@@ -1,15 +1,19 @@
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
-import { getAccessToken } from '../cookies/AuthCookie';
+import { getAccessToken, getUserCookie } from '../cookies/AuthCookie';
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ children, allowedRoles }) => {
     const isAuthenticated = !!getAccessToken();
+    const userRole = getUserCookie()?.role;
 
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    if (!isAuthenticated) return <Navigate to="/login" />;
+    if (!allowedRoles.includes(userRole)) return <Navigate to="/dashboard" />;
+    return children;
 };
 
 PrivateRoute.propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired, // Ensures that children are passed to the component
+    allowedRoles: PropTypes.arrayOf(PropTypes.string).isRequired, // Validates allowedRoles is an array of strings
 };
 
 export default PrivateRoute;
