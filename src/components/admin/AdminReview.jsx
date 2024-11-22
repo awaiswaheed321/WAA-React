@@ -5,10 +5,11 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
-import SecureAdminApi from '../services/SecureAdminApi';
-import useSnackStore from '../store/SnackStore.js';
-import CustomSnackBar from './CustomSnackBar.jsx';
+import { deleteAllCookies, getAccessToken } from '../../cookies/AuthCookie.js';
+import SecureAdminApi from '../../services/AdminAPI.js';
+import useSnackStore from '../../store/SnackStore.js';
+import CustomSnackBar from '../base/CustomSnackBar.jsx';
+import HelperService from '../../services/HelperService.js';
 
 export default function AdminReview(props) {
     const { openSnackBar } = useSnackStore();
@@ -22,7 +23,7 @@ export default function AdminReview(props) {
             );
             if (res.ok) {
                 openSnackBar('Deleted Successfully', 'success');
-                await delay(1000);
+                await HelperService.delay(2000);
                 props.fetchReviews();
             } else if (res.status === 403) {
                 await handle403();
@@ -37,14 +38,10 @@ export default function AdminReview(props) {
 
     const handle403 = async () => {
         openSnackBar('Your session has expired', 'error');
-        await delay(2000);
+        await HelperService.delay(2000);
         deleteAllCookies();
         navigate('/');
     };
-
-    function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
 
     return (
         <div>
@@ -82,7 +79,7 @@ export default function AdminReview(props) {
                                 <strong>Comment:</strong> {props.comment}
                             </Typography>
                             <Rating
-                                name="rating-example"
+                                name="review-rating"
                                 value={props.rating}
                             />
                         </Box>

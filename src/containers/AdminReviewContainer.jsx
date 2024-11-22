@@ -2,9 +2,10 @@ import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
-import SecureAdminApi from '../services/SecureAdminApi';
+import AdminAPI from '../services/AdminAPI.js';
 import useSnackStore from '../store/SnackStore.js';
-import AdminReview from '../components/AdminReview.jsx';
+import AdminReview from '../components/admin/AdminReview.jsx';
+import HelperService from '../services/HelperService.js';
 
 export default function AdminReviewContainer() {
     const [reviews, setReviews] = useState([]);
@@ -13,15 +14,13 @@ export default function AdminReviewContainer() {
 
     const fetchReviews = async () => {
         try {
-            const res = await SecureAdminApi.getReviews(
-                getAccessToken(),
-            );
+            const res = await AdminAPI.getReviews(getAccessToken());
             if (res.ok) {
                 const body = await res.json();
                 setReviews(body);
             } else if (res.status === 403) {
                 openSnackBar('Your session has expired', 'error');
-                await delay(2000);
+                await HelperService.delay(2000);
                 deleteAllCookies();
                 navigate('/');
             } else {
@@ -29,7 +28,7 @@ export default function AdminReviewContainer() {
                 openSnackBar(body.message, 'error');
             }
         } catch (error) {
-            console.error('Error fetching Students:', error);
+            console.error('Error fetching Reviews:', error);
         }
     };
 
@@ -67,10 +66,6 @@ export default function AdminReviewContainer() {
                 </Typography>
             </Box>
         );
-
-    function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
 
     return (
         <div>

@@ -1,6 +1,8 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
+import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import WavingHandRoundedIcon from '@mui/icons-material/WavingHandRounded';
+import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import {
     AppBar,
     Box,
@@ -18,14 +20,17 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import Footer from '../components/Footer';
-import { deleteAllCookies } from '../cookies/AuthCookie';
+import Footer from '../components/dashboard/Footer';
+import UserRole from '../constants/UserRoles';
+import { deleteAllCookies, getUserCookie } from '../cookies/AuthCookie';
+import NoteAddRoundedIcon from '@mui/icons-material/NoteAddRounded';
 
 const drawerWidth = 240;
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const user = getUserCookie();
 
     const toggleDrawer = (event) => {
         event.stopPropagation();
@@ -111,6 +116,7 @@ const Dashboard = () => {
                         <Toolbar />
                         <Box sx={{ overflow: 'auto' }}>
                             <List>
+                                {/* Welcome Page */}
                                 <ListItem
                                     button
                                     component={Link}
@@ -122,28 +128,62 @@ const Dashboard = () => {
                                     </ListItemIcon>
                                     <ListItemText primary="Welcome" />
                                 </ListItem>
-                                <ListItem
-                                    button
-                                    component={Link}
-                                    to="pending-sellers"
-                                    onClick={handleDrawerItemClick}
-                                >
-                                    <ListItemIcon>
-                                        <PersonAddRoundedIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Pending Sellers" />
-                                </ListItem>
-                                <ListItem
-                                    button
-                                    component={Link}
-                                    to="admin-reviews"
-                                    onClick={handleDrawerItemClick}
-                                >
-                                    <ListItemIcon>
-                                        <PersonAddRoundedIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Reviews" />
-                                </ListItem>
+                                {/* Admin's Pending Seller */}
+                                {user.role === UserRole.ADMIN && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="pending-sellers"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <PersonAddRoundedIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Pending Sellers" />
+                                    </ListItem>
+                                )}
+                                {/* Admin's Reviews */}
+                                {user.role === UserRole.ADMIN && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="admin-reviews"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <RateReviewRoundedIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Reviews" />
+                                    </ListItem>
+                                )}
+                                {/* Seller's Create Product */}
+                                {user.role === UserRole.SELLER && user.approved && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="create-product"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <NoteAddRoundedIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Create Product" />
+                                    </ListItem>
+                                )}
+                                {/* Seller's Products Container*/}
+                                {user.role === UserRole.SELLER && user.approved && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="seller-products"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <CategoryRoundedIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Products" />
+                                    </ListItem>
+                                )}
                             </List>
                         </Box>
                     </Drawer>

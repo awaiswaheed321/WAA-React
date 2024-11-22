@@ -11,11 +11,11 @@ import {
 } from '@mui/material';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setAllCookies } from '../cookies/AuthCookie.js';
-import AuthApi from '../services/AuthApi.js';
-import useSnackStore from '../store/SnackStore.js';
-import CustomSnackBar from './CustomSnackBar.jsx';
-import Footer from './Footer.jsx';
+import { setAllCookies } from '../../cookies/AuthCookie.js';
+import AuthAPI from '../../services/AuthAPI.js';
+import useSnackStore from '../../store/SnackStore.js';
+import CustomSnackBar from '../base/CustomSnackBar.jsx';
+import Footer from '../dashboard/Footer.jsx';
 
 const Login = () => {
     const formRef = useRef(null);
@@ -41,7 +41,7 @@ const Login = () => {
     };
 
     const handleLogin = async (data) => {
-        const res = await AuthApi.login(data);
+        const res = await AuthAPI.login(data);
         if (!res.ok) {
             const error = await res.json();
             openSnackBar(error.message, 'error');

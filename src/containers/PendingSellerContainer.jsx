@@ -1,10 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PendingSeller from '../components/PendingSeller.jsx';
+import PendingSeller from '../components/admin/PendingSeller.jsx';
 import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
-import SecureAdminApi from '../services/SecureAdminApi';
+import AdminAPI from '../services/AdminAPI.js';
 import useSnackStore from '../store/SnackStore.js';
+import HelperService from '../services/HelperService.js';
 
 function PendingSellerContainer() {
     const [sellers, setSellers] = useState([]);
@@ -13,25 +14,25 @@ function PendingSellerContainer() {
 
     const fetchSellers = async () => {
         try {
-            const res = await SecureAdminApi.getPendingSellers(
-                getAccessToken(),
-            );
+            const res = await AdminAPI.getPendingSellers(getAccessToken());
+            const body = await res.json();
+    
             if (res.ok) {
-                const body = await res.json();
                 setSellers(body);
             } else if (res.status === 403) {
                 openSnackBar('Your session has expired', 'error');
-                await delay(2000);
+                await HelperService.delay(2000);
                 deleteAllCookies();
                 navigate('/');
             } else {
-                const body = await res.body();
-                openSnackBar(body.message, 'error');
+                openSnackBar(body.message || 'An error occurred', 'error');
             }
         } catch (error) {
-            console.error('Error fetching Students:', error);
+            console.error('Error fetching Sellers:', error);
+            openSnackBar('Failed to fetch sellers. Please try again.', 'error');
         }
     };
+    
 
     useEffect(() => {
         fetchSellers();
@@ -67,10 +68,6 @@ function PendingSellerContainer() {
                 </Typography>
             </Box>
         );
-
-    function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
 
     return (
         <div>

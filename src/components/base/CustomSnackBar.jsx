@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, IconButton, Slide, Snackbar } from '@mui/material';
 import React, { useEffect } from 'react';
-import useSnackStore from '../store/SnackStore.js';
+import useSnackStore from '../../store/SnackStore.js';
 
 export default function CustomSnackBar() {
     const { snackProps, resetSnackProps } = useSnackStore();
@@ -35,14 +35,17 @@ export default function CustomSnackBar() {
     function SlideTransition(props) {
         return <Slide {...props} direction="up" />;
     }
+
     return (
         <Snackbar
             open={snackProps.open}
             onClose={handleSnackBarClose}
             action={action}
-            onExited={resetSnackProps}
             TransitionComponent={SlideTransition}
             autoHideDuration={3000}
+            TransitionProps={{
+                onExited: resetSnackProps,
+            }}
         >
             <Alert
                 onClose={handleSnackBarClose}

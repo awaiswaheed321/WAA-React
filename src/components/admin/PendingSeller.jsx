@@ -5,10 +5,11 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
-import SecureAdminApi from '../services/SecureAdminApi';
-import useSnackStore from '../store/SnackStore.js';
-import CustomSnackBar from './CustomSnackBar.jsx';
+import { deleteAllCookies, getAccessToken } from '../../cookies/AuthCookie.js';
+import AdminAPI from '../../services/AdminAPI.js';
+import HelperService from '../../services/HelperService.js';
+import useSnackStore from '../../store/SnackStore.js';
+import CustomSnackBar from '../base/CustomSnackBar.jsx';
 
 export default function PendingSeller(props) {
     const { openSnackBar } = useSnackStore();
@@ -16,13 +17,13 @@ export default function PendingSeller(props) {
 
     const handleApprove = async () => {
         try {
-            const res = await SecureAdminApi.approveSeller(
+            const res = await AdminAPI.approveSeller(
                 getAccessToken(),
                 props.id,
             );
             if (res.ok) {
                 openSnackBar('Approved Successfully', 'success');
-                await delay(1000);
+                await HelperService.delay(2000);
                 props.fetchSellers();
             } else if (res.status === 403) {
                 await handle403();
@@ -37,13 +38,10 @@ export default function PendingSeller(props) {
 
     const handleReject = async () => {
         try {
-            const res = await SecureAdminApi.rejectSeller(
-                getAccessToken(),
-                props.id,
-            );
+            const res = await AdminAPI.rejectSeller(getAccessToken(), props.id);
             if (res.ok) {
                 openSnackBar('Rejected Successfully', 'success');
-                await delay(1000);
+                await HelperService.delay(2000);
                 props.fetchSellers();
             } else if (res.status === 403) {
                 await handle403();
@@ -58,14 +56,10 @@ export default function PendingSeller(props) {
 
     const handle403 = async () => {
         openSnackBar('Your session has expired', 'error');
-        await delay(2000);
+        await HelperService.delay(2000);
         deleteAllCookies();
         navigate('/');
     };
-
-    function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
 
     return (
         <div>

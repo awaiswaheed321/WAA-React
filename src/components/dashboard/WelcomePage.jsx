@@ -11,8 +11,8 @@ import {
     Typography,
 } from '@mui/material';
 import Footer from './Footer';
-import sellImage from '/src/assets/sell.avif';
-import buyImage from '/src/assets/deals.avif';
+import sellImage from '../../assets/sell.avif';
+import buyImage from '../../assets/deals.avif';
 import { useNavigate } from 'react-router-dom';
 
 const WelcomePage = () => {

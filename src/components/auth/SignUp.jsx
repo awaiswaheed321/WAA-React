@@ -15,10 +15,11 @@ import {
 } from '@mui/material';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthApi from '../services/AuthApi.js';
-import useSnackStore from '../store/SnackStore.js';
-import CustomSnackBar from './CustomSnackBar.jsx';
-import Footer from './Footer.jsx';
+import AuthAPI from '../../services/AuthAPI.js';
+import useSnackStore from '../../store/SnackStore.js';
+import CustomSnackBar from '../base/CustomSnackBar.jsx';
+import Footer from '../dashboard/Footer.jsx';
+import HelperService from '../../services/HelperService.js';
 
 const SignUp = () => {
     const formRef = useRef(null);
@@ -62,7 +63,7 @@ const SignUp = () => {
     };
 
     const handleSignUp = async (data) => {
-        const res = await AuthApi.signup(data);
+        const res = await AuthAPI.signup(data);
         if (!res.ok) {
             const error = await res.json();
             openSnackBar(error.message, 'error');
@@ -70,7 +71,7 @@ const SignUp = () => {
             const success = await res.json();
             openSnackBar(generateWelcomeMessage(success), 'success');
             resetForm();
-            await delay(2000);
+            await HelperService.delay(2000);
             navigate('/login');
         }
     };
@@ -86,10 +87,6 @@ const SignUp = () => {
             formElements.role.value = 'BUYER';
         }
     };
-
-    function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
 
     const generateWelcomeMessage = (res) => {
         const { firstName, lastName } = res;
