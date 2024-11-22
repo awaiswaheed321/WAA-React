@@ -11,6 +11,7 @@ import AdminReviewContainer from '../containers/AdminReviewContainer.jsx';
 import CreateProduct from '../components/seller/CreateProduct.jsx';
 import SellerProductContainer from '../containers/SellerProductContainer.jsx';
 import SellerProductDetail from '../components/seller/SellerProductDetail.jsx';
+import UpdateProduct from '../components/seller/UpdateProduct.jsx';
 
 export const AppRouter = createBrowserRouter([
     {
@@ -39,6 +40,7 @@ export const AppRouter = createBrowserRouter([
             { path: 'create-product', element: <CreateProduct /> },
             { path: 'seller-products', element: <SellerProductContainer /> },
             { path: 'seller-products/:id', element: <SellerProductDetail /> },
+            { path: 'seller-products/update/:id', element: <UpdateProduct /> },
         ],
     },
     {

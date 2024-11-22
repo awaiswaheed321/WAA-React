@@ -89,10 +89,14 @@ const SellerProductDetail = () => {
 
     const handleAddStock = async () => {
         try {
-            const res = await SellerAPI.addToProductStock(getAccessToken(), id, stockToAdd);
+            const res = await SellerAPI.addToProductStock(
+                getAccessToken(),
+                id,
+                stockToAdd,
+            );
             if (res.ok) {
                 openSnackBar('Stock Added', 'success');
-                await HelperService.delay(1500)
+                await HelperService.delay(1500);
                 await fetchProduct();
             } else if (res.status === 403) {
                 await handle403();
@@ -106,8 +110,18 @@ const SellerProductDetail = () => {
     };
 
     const handleUpdateProduct = () => {
-        // navigate(`/dashboard/update-product/${product.id}`);
-        console.log('Update Clicked');
+        if (product) {
+            const { name, description, price, stock, category } = product;
+            navigate(`/dashboard/seller-products/update/${product.id}`, {
+                state: {
+                    name: name,
+                    description: description,
+                    price: price,
+                    stock: stock,
+                    categoryId: category.id,
+                },
+            });
+        }
     };
 
     const handleStockInputChange = (event) => {

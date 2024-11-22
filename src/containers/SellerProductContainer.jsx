@@ -12,12 +12,12 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CustomSnackBar from '../components/base/CustomSnackBar.jsx';
 import SellerProduct from '../components/seller/SellerProduct.jsx';
 import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
 import HelperService from '../services/HelperService.js';
 import SellerAPI from '../services/SellerAPI.js';
 import useSnackStore from '../store/SnackStore.js';
+import CustomSnackBar from '../components/base/CustomSnackBar.jsx';
 
 function SellerProductContainer() {
     const [products, setProducts] = useState([]);
@@ -139,7 +139,7 @@ function SellerProductContainer() {
 
     const productsList =
         products.length > 0 ? (
-            products.map((p) => <SellerProduct key={p.id} {...p}/>)
+            products.map((p) => <SellerProduct key={p.id} {...p} />)
         ) : (
             <Box
                 sx={{
@@ -219,7 +219,6 @@ function SellerProductContainer() {
                         label="Category"
                         displayEmpty // This ensures that the placeholder text is shown when no option is selected
                     >
-
                         {/* Render category options */}
                         {categories.map((category) => (
                             <MenuItem key={category.id} value={category.id}>

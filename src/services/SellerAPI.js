@@ -33,6 +33,16 @@ async function addToProductStock(token, id, stock) {
     );
 }
 
+async function updateProductById(token, id, body) {
+    return await makeSecureApiCall(
+        'PUT',
+        `${ApiUrls.PRODUCTS}/${id}`,
+        {},
+        body,
+        token,
+    );
+}
+
 async function getProductById(token, id) {
     return await makeSecureApiCall(
         'GET',
@@ -69,4 +79,5 @@ export default {
     getProductById,
     deleteProductById,
     addToProductStock,
+    updateProductById,
 };

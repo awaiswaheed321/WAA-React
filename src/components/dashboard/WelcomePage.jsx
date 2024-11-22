@@ -10,10 +10,11 @@ import {
     Toolbar,
     Typography,
 } from '@mui/material';
-import Footer from './Footer';
-import sellImage from '../../assets/sell.avif';
-import buyImage from '../../assets/deals.avif';
 import { useNavigate } from 'react-router-dom';
+import buyImage from '../../assets/deals.avif';
+import sellImage from '../../assets/sell.avif';
+import CustomSnackBar from '../base/CustomSnackBar';
+import Footer from './Footer';
 
 const WelcomePage = () => {
     const navigate = useNavigate();
@@ -122,8 +123,8 @@ const WelcomePage = () => {
                     </Grid2>
                 </Container>
             </Box>
-
             <Footer />
+            <CustomSnackBar />
         </Box>
     );
 };
