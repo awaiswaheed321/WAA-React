@@ -12,6 +12,8 @@ async function makeApiCallBase(method, url, params = {}, body = null, accessToke
         headers,
         ...(body && { body: JSON.stringify(body) }),
     };
+    console.log(fullUrl);
+    console.log(options)
     return await fetch(fullUrl.toString(), options);
 }
 

@@ -1,23 +1,37 @@
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CustomSnackBar from '../components/base/CustomSnackBar.jsx';
+import SellerOrder from '../components/seller/SellerOrder.jsx';
 import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
-import AdminAPI from '../services/AdminAPI.js';
-import useSnackStore from '../store/SnackStore.js';
-import AdminReview from '../components/admin/AdminReview.jsx';
 import HelperService from '../services/HelperService.js';
+import SellerAPI from '../services/SellerAPI.js';
+import useSnackStore from '../store/SnackStore.js';
 
-export default function AdminReviewContainer() {
-    const [reviews, setReviews] = useState([]);
+function SellerOrderContainer() {
+    const [orders, setOrders] = useState([]);
     const { openSnackBar, resetSnackProps } = useSnackStore();
     const navigate = useNavigate();
 
-    const fetchReviews = async () => {
+    const OrderStatusOrder = [
+        'PENDING',
+        'SHIPPED',
+        'ON_THE_WAY',
+        'DELIVERED',
+        'CANCELLED',
+    ];
+
+    const fetchOrders = async () => {
         try {
-            const res = await AdminAPI.getReviews(getAccessToken());
+            const res = await SellerAPI.getSellerOrders(getAccessToken());
             if (res.ok) {
                 const body = await res.json();
-                setReviews(body);
+                const sortedOrders = body.sort((a, b) => {
+                    const statusA = OrderStatusOrder.indexOf(a.status);
+                    const statusB = OrderStatusOrder.indexOf(b.status);
+                    return statusA - statusB;
+                });
+                setOrders(sortedOrders);
             } else if (res.status === 403) {
                 openSnackBar('Your session has expired', 'error');
                 await HelperService.delay(2000);
@@ -34,24 +48,17 @@ export default function AdminReviewContainer() {
 
     useEffect(() => {
         resetSnackProps();
-        fetchReviews();
+        fetchOrders();
         const interval = setInterval(() => {
-            fetchReviews();
+            fetchOrders();
         }, 60000);
         return () => clearInterval(interval);
     }, []);
 
-    const sellersList =
-        reviews.length > 0 ? (
-            reviews.map((p) => (
-                <AdminReview
-                    key={p.id}
-                    id={p.id}
-                    productName={p.productName}
-                    rating={p.rating}
-                    comment={p.comment}
-                    fetchReviews={fetchReviews}
-                />
+    const ordersList =
+        orders.length > 0 ? (
+            orders.map((p) => (
+                <SellerOrder key={p.id} {...p} fetchOrders={fetchOrders} />
             ))
         ) : (
             <Box
@@ -75,11 +82,14 @@ export default function AdminReviewContainer() {
                 color="textSecondary"
                 sx={{ fontWeight: 'bold' }}
             >
-                Reviews
+                Orders
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={2}>
-                {sellersList}
+                {ordersList}
             </Box>
+            <CustomSnackBar />
         </div>
     );
 }
+
+export default SellerOrderContainer;

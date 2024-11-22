@@ -125,7 +125,7 @@ const SellerProductDetail = () => {
     };
 
     const handleStockInputChange = (event) => {
-        const value = Math.max(1, Math.floor(event.target.value));
+        const value = Math.max(0, Math.floor(event.target.value));
         setStockToAdd(value);
     };
 
@@ -159,7 +159,7 @@ const SellerProductDetail = () => {
                                 value={stockToAdd}
                                 onChange={handleStockInputChange}
                                 InputProps={{
-                                    inputProps: { min: 1 },
+                                    inputProps: { min: 0 },
                                 }}
                                 size="small"
                                 sx={{ maxWidth: '100px' }}
@@ -204,7 +204,12 @@ const SellerProductDetail = () => {
                 {product.description}
             </Typography>
             <Typography variant="h6">Price: ${product.price}</Typography>
-            <Typography variant="body1">Stock: {product.stock}</Typography>
+            <Typography
+                variant="body1"
+                color={product.stock === 0 ? 'error' : 'text.primary'}
+            >
+                Stock: {product.stock === 0 ? 'Sold Out' : product.stock}
+            </Typography>
             <Typography variant="body2" color="textSecondary">
                 Category: {product.category.name}
             </Typography>

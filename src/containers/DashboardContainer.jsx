@@ -1,8 +1,10 @@
+import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import MenuIcon from '@mui/icons-material/Menu';
+import NoteAddRoundedIcon from '@mui/icons-material/NoteAddRounded';
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import WavingHandRoundedIcon from '@mui/icons-material/WavingHandRounded';
-import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import {
     AppBar,
     Box,
@@ -23,7 +25,6 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import Footer from '../components/dashboard/Footer';
 import UserRole from '../constants/UserRoles';
 import { deleteAllCookies, getUserCookie } from '../cookies/AuthCookie';
-import NoteAddRoundedIcon from '@mui/icons-material/NoteAddRounded';
 
 const drawerWidth = 240;
 
@@ -77,7 +78,13 @@ const Dashboard = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" sx={{ flexGrow: 1, cursor: "pointer"  }} onClick= {() => {navigate("/dashboard")}}>
+                    <Typography
+                        variant="h6"
+                        sx={{ flexGrow: 1, cursor: 'pointer' }}
+                        onClick={() => {
+                            navigate('/dashboard');
+                        }}
+                    >
                         MarketPlace Pro
                     </Typography>
                     <Button
@@ -157,33 +164,50 @@ const Dashboard = () => {
                                     </ListItem>
                                 )}
                                 {/* Seller's Create Product */}
-                                {user.role === UserRole.SELLER && user.approved && (
-                                    <ListItem
-                                        button
-                                        component={Link}
-                                        to="create-product"
-                                        onClick={handleDrawerItemClick}
-                                    >
-                                        <ListItemIcon>
-                                            <NoteAddRoundedIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Create Product" />
-                                    </ListItem>
-                                )}
+                                {user.role === UserRole.SELLER &&
+                                    user.approved && (
+                                        <ListItem
+                                            button
+                                            component={Link}
+                                            to="create-product"
+                                            onClick={handleDrawerItemClick}
+                                        >
+                                            <ListItemIcon>
+                                                <NoteAddRoundedIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Create Product" />
+                                        </ListItem>
+                                    )}
                                 {/* Seller's Products Container*/}
-                                {user.role === UserRole.SELLER && user.approved && (
-                                    <ListItem
-                                        button
-                                        component={Link}
-                                        to="seller-products"
-                                        onClick={handleDrawerItemClick}
-                                    >
-                                        <ListItemIcon>
-                                            <CategoryRoundedIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Products" />
-                                    </ListItem>
-                                )}
+                                {user.role === UserRole.SELLER &&
+                                    user.approved && (
+                                        <ListItem
+                                            button
+                                            component={Link}
+                                            to="seller-products"
+                                            onClick={handleDrawerItemClick}
+                                        >
+                                            <ListItemIcon>
+                                                <CategoryRoundedIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Products" />
+                                        </ListItem>
+                                    )}
+                                {/* Seller's Order Container*/}
+                                {user.role === UserRole.SELLER &&
+                                    user.approved && (
+                                        <ListItem
+                                            button
+                                            component={Link}
+                                            to="seller-orders"
+                                            onClick={handleDrawerItemClick}
+                                        >
+                                            <ListItemIcon>
+                                                <ShoppingCartOutlinedIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Orders" />
+                                        </ListItem>
+                                    )}
                             </List>
                         </Box>
                     </Drawer>

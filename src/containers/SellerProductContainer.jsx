@@ -29,7 +29,7 @@ function SellerProductContainer() {
         categoryId: '',
         sellerId: '',
         description: '',
-        stockAvailable: 1, // default to checked (1)
+        stockAvailable: 1,
         page: 0,
         size: 8,
     });
@@ -64,7 +64,6 @@ function SellerProductContainer() {
 
     const fetchProducts = async () => {
         try {
-            // Build the params object dynamically based on the filters with non-empty values
             const params = {
                 name: filters.name,
                 priceMin: filters.priceMin,
@@ -77,7 +76,6 @@ function SellerProductContainer() {
                 size: filters.size,
             };
 
-            // Remove filters with empty or falsy values
             Object.keys(params).forEach((key) => {
                 if (!params[key] && params[key] !== 0) {
                     delete params[key];
@@ -263,7 +261,7 @@ function SellerProductContainer() {
             </Box>
 
             {/* Pagination Controls */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, gap: 2 }}>
                 <Button
                     variant="outlined"
                     disabled={filters.page <= 0}

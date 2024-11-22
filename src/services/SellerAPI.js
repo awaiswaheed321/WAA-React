@@ -5,8 +5,10 @@ const BASE_URL = 'http://localhost:8080/api/v1';
 const ApiUrls = Object.freeze({
     CATEGORY: `${BASE_URL}/category`,
     PRODUCTS: `${BASE_URL}/seller/products`,
+    ORDERS: `${BASE_URL}/seller/orders`,
     IMAGE: `${BASE_URL}/images/upload/`,
     STOCK: '/stock',
+    STATUS: '/status',
 });
 
 async function getCategories(token) {
@@ -71,6 +73,21 @@ async function uploadImage(token, productId, file) {
     return await uploadFile(`${ApiUrls.IMAGE}${productId}`, file, token);
 }
 
+async function getSellerOrders(token) {
+    return await makeSecureApiCall('GET', ApiUrls.ORDERS, {}, null, token);
+}
+
+async function updateOrderStatus(token, id, status) {
+    console.log('API:', token);
+    return await makeSecureApiCall(
+        'PUT',
+        `${ApiUrls.ORDERS}/${id}${ApiUrls.STATUS}`,
+        { status: status },
+        null,
+        token,
+    );
+}
+
 export default {
     getCategories,
     createProduct,
@@ -80,4 +97,6 @@ export default {
     deleteProductById,
     addToProductStock,
     updateProductById,
+    getSellerOrders,
+    updateOrderStatus,
 };

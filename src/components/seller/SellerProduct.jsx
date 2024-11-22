@@ -27,7 +27,12 @@ function SellerProduct(props) {
     };
 
     return (
-        <Card sx={{ minWidth: 300, maxWidth: 300 }} onClick={() => {navigate(`/dashboard/seller-products/${props.id}`)}}>
+        <Card
+            sx={{ minWidth: 300, maxWidth: 300 }}
+            onClick={() => {
+                navigate(`/dashboard/seller-products/${props.id}`);
+            }}
+        >
             <CardMedia
                 component="img"
                 height="200"
@@ -42,8 +47,12 @@ function SellerProduct(props) {
                 <Typography variant="body1">
                     <strong>Price:</strong> ${props.price.toFixed(2)}
                 </Typography>
-                <Typography variant="body2">
-                    <strong>Stock:</strong> {props.stock}
+                <Typography
+                    variant="body2"
+                    color={props.stock === 0 ? 'error' : 'text.primary'}
+                >
+                    <strong>Stock:</strong>{' '}
+                    {props.stock === 0 ? 'Sold Out' : props.stock}
                 </Typography>
                 <Typography variant="body2">
                     <strong>Category:</strong> {props.category.name}
