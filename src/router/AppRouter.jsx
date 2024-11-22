@@ -2,18 +2,22 @@ import { createBrowserRouter } from 'react-router-dom';
 import Login from '../components/auth/Login.jsx';
 import SignUp from '../components/auth/SignUp.jsx';
 import NotFound from '../components/base/NotFound.jsx';
+import BuyerProductDetail from '../components/buyer/BuyerProdutcDetail.jsx';
+import DashboardLanding from '../components/dashboard/DashboardLanding.jsx';
 import WelcomePage from '../components/dashboard/WelcomePage.jsx';
 import CreateProduct from '../components/seller/CreateProduct.jsx';
 import SellerProductDetail from '../components/seller/SellerProductDetail.jsx';
 import UpdateProduct from '../components/seller/UpdateProduct.jsx';
 import UserRole from '../constants/UserRoles.js';
 import AdminReviewContainer from '../containers/AdminReviewContainer.jsx';
+import BuyerProductContainer from '../containers/BuyerProductContainer.jsx';
 import Dashboard from '../containers/DashboardContainer.jsx';
 import PendingSellerContainer from '../containers/PendingSellerContainer.jsx';
 import SellerOrderContainer from '../containers/SellerOrderContainer.jsx';
 import SellerProductContainer from '../containers/SellerProductContainer.jsx';
 import PrivateRoute from './PrivateRouter.jsx';
-import DashboardLanding from '../components/dashboard/DashboardLanding.jsx'
+import BuyerOrderContainer from '../containers/BuyerOrderContainer.jsx';
+import BuyerOrderDetail from '../components/buyer/BuyerOrderDetail.jsx';
 
 export const AppRouter = createBrowserRouter([
     {
@@ -31,16 +35,27 @@ export const AppRouter = createBrowserRouter([
     {
         path: '/dashboard',
         element: (
-            <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.SELLER]}>
+            <PrivateRoute
+                allowedRoles={[UserRole.ADMIN, UserRole.SELLER, UserRole.BUYER]}
+            >
                 <Dashboard />
             </PrivateRoute>
         ),
         children: [
-            { path: '', element: (
-                <PrivateRoute allowedRoles={[UserRole.ADMIN, UserRole.SELLER, UserRole.BUYER]}>
-                    <DashboardLanding />
-                </PrivateRoute>
-            ) },
+            {
+                path: '',
+                element: (
+                    <PrivateRoute
+                        allowedRoles={[
+                            UserRole.ADMIN,
+                            UserRole.SELLER,
+                            UserRole.BUYER,
+                        ]}
+                    >
+                        <DashboardLanding />
+                    </PrivateRoute>
+                ),
+            },
             // Admin Routes
             {
                 path: 'admin-reviews',
@@ -96,6 +111,39 @@ export const AppRouter = createBrowserRouter([
                 element: (
                     <PrivateRoute allowedRoles={[UserRole.SELLER]}>
                         <SellerOrderContainer />
+                    </PrivateRoute>
+                ),
+            },
+            // Buyer Routes
+            {
+                path: 'buyer-products',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.BUYER]}>
+                        <BuyerProductContainer />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'buyer-products/:id',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.BUYER]}>
+                        <BuyerProductDetail />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'buyer-orders',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.BUYER]}>
+                        <BuyerOrderContainer />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'buyer-orders/:id',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.BUYER]}>
+                        <BuyerOrderDetail />
                     </PrivateRoute>
                 ),
             },

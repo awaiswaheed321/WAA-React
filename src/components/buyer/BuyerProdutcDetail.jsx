@@ -11,24 +11,24 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { deleteAllCookies, getAccessToken } from '../../cookies/AuthCookie.js';
+import { getAccessToken } from '../../cookies/AuthCookie.js';
+import BuyerAPI from '../../services/BuyerAPI.js';
 import HelperService from '../../services/HelperService.js';
-import SellerAPI from '../../services/SellerAPI.js';
 import useSnackStore from '../../store/SnackStore.js';
 import CustomSnackBar from '../base/CustomSnackBar.jsx';
 
-const SellerProductDetail = () => {
+const BuyerProductDetail = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [stockToAdd, setStockToAdd] = useState(1);
+    const [quantity, setQuantity] = useState(1); // Quantity state
     const navigate = useNavigate();
     const { openSnackBar, resetSnackProps } = useSnackStore();
 
     const fetchProduct = async () => {
         try {
             resetSnackProps();
-            const res = await SellerAPI.getProductById(getAccessToken(), id);
+            const res = await BuyerAPI.getProductById(getAccessToken(), id);
             if (res.ok) {
                 const body = await res.json();
                 setProduct(body);
@@ -39,20 +39,19 @@ const SellerProductDetail = () => {
                 openSnackBar(body.message, 'error');
             }
         } catch (error) {
-            console.error('Error fetching Categories:', error);
+            console.error('Error fetching product:', error);
         }
     };
 
     const handle403 = async () => {
         openSnackBar('Your session has expired', 'error');
         await HelperService.delay(2000);
-        deleteAllCookies();
         navigate('/');
     };
 
     useEffect(() => {
         fetchProduct();
-    }, []);
+    }, [id]);
 
     const handleNextImage = () => {
         if (product && currentImageIndex < product.images.length - 1) {
@@ -66,11 +65,25 @@ const SellerProductDetail = () => {
         }
     };
 
-    const handleDeleteProduct = async () => {
+    const handleAddToCart = async () => {
+        if (quantity > product.stock) {
+            openSnackBar('Entered quantity exceeds available stock!', 'error');
+            return;
+        }
+        if (quantity <= 0) {
+            openSnackBar('Quantity must be at least 1!', 'error');
+            return;
+        }
+
         try {
-            const res = await SellerAPI.deleteProductById(getAccessToken(), id);
+            resetSnackProps();
+            const res = await BuyerAPI.addToCart(getAccessToken(), {
+                productId: product.id,
+                quantity: quantity,
+            });
             if (res.ok) {
-                openSnackBar('Product Deleted', 'success');
+                openSnackBar('Product Added to Cart.', 'success');
+                await HelperService.delay(1000);
                 navigate(-1);
             } else if (res.status === 403) {
                 await handle403();
@@ -79,7 +92,7 @@ const SellerProductDetail = () => {
                 openSnackBar(body.message, 'error');
             }
         } catch (error) {
-            console.error('Error deleting product:', error);
+            console.error('Error fetching product:', error);
         }
     };
 
@@ -87,52 +100,11 @@ const SellerProductDetail = () => {
         navigate(-1);
     };
 
-    const handleAddStock = async () => {
-        try {
-            const res = await SellerAPI.addToProductStock(
-                getAccessToken(),
-                id,
-                stockToAdd,
-            );
-            if (res.ok) {
-                openSnackBar('Stock Added', 'success');
-                await HelperService.delay(1500);
-                await fetchProduct();
-            } else if (res.status === 403) {
-                await handle403();
-            } else {
-                const body = await res.json();
-                openSnackBar(body.message, 'error');
-            }
-        } catch (error) {
-            console.error('Error deleting product:', error);
-        }
-    };
-
-    const handleUpdateProduct = () => {
-        if (product) {
-            const { name, description, price, stock, category } = product;
-            navigate(`/dashboard/seller-products/update/${product.id}`, {
-                state: {
-                    name: name,
-                    description: description,
-                    price: price,
-                    stock: stock,
-                    categoryId: category.id,
-                },
-            });
-        }
-    };
-
-    const handleStockInputChange = (event) => {
-        const value = Math.max(0, Math.floor(event.target.value));
-        setStockToAdd(value);
-    };
-
     if (!product) return <Typography>Loading...</Typography>;
 
     return (
         <Box sx={{ padding: 4 }}>
+            {/* Top Buttons */}
             <Grid
                 container
                 alignItems="center"
@@ -149,47 +121,31 @@ const SellerProductDetail = () => {
                         Back to Products
                     </Button>
                 </Grid>
-                {/* Update and Delete Buttons */}
+
+                {/* Add to Cart */}
                 <Grid item>
-                    <Grid container spacing={2} alignItems="center">
+                    <Grid container spacing={1} alignItems="center">
                         <Grid item>
                             <TextField
                                 type="number"
-                                label="Stock"
-                                value={stockToAdd}
-                                onChange={handleStockInputChange}
-                                InputProps={{
-                                    inputProps: { min: 0 },
-                                }}
                                 size="small"
-                                sx={{ maxWidth: '100px' }}
+                                value={quantity}
+                                onChange={(e) =>
+                                    setQuantity(Number(e.target.value))
+                                }
+                                InputProps={{ inputProps: { min: 1 } }}
+                                label="Quantity"
+                                variant="outlined"
                             />
                         </Grid>
                         <Grid item>
                             <Button
                                 variant="contained"
                                 sx={{ bgcolor: '#748CAB' }}
-                                onClick={handleAddStock}
+                                onClick={handleAddToCart}
+                                disabled={product.stock === 0}
                             >
-                                Update Stock
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                onClick={handleUpdateProduct}
-                                sx={{ bgcolor: '#748CAB' }}
-                            >
-                                Update Info
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={handleDeleteProduct}
-                            >
-                                Delete
+                                Add to Cart
                             </Button>
                         </Grid>
                     </Grid>
@@ -243,30 +199,35 @@ const SellerProductDetail = () => {
             </Box>
 
             {/* Reviews */}
-            <Box mt={4}>
-                <Typography variant="h6">Reviews</Typography>
-                {product.reviews && product.reviews.length > 0 ? (
-                    product.reviews.map((review, index) => (
-                        <Paper key={index} sx={{ padding: 2, marginTop: 1 }}>
-                            <Rating
-                                name="review-rating"
-                                value={review.rating}
-                                readOnly
-                            />
-                            <Typography variant="body2">
-                                {review.comment}
-                            </Typography>
-                        </Paper>
-                    ))
-                ) : (
-                    <Typography variant="body2" color="text.secondary">
-                        No reviews as of yet
-                    </Typography>
-                )}
-            </Box>
+            <Typography variant="h6" sx={{ marginTop: 2 }}>
+                Reviews
+            </Typography>
+            {product.reviews && product.reviews.length > 0 ? (
+                product.reviews.map((review, index) => (
+                    <Paper key={index} sx={{ padding: 2, marginTop: 1 }}>
+                        <Rating
+                            name="review-rating"
+                            value={review.rating}
+                            readOnly
+                        />
+                        <Typography variant="body2">
+                            {review.comment}
+                        </Typography>
+                    </Paper>
+                ))
+            ) : (
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ marginTop: 1 }}
+                >
+                    No reviews as of yet
+                </Typography>
+            )}
+
             <CustomSnackBar />
         </Box>
     );
 };
 
-export default SellerProductDetail;
+export default BuyerProductDetail;

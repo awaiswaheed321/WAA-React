@@ -14,13 +14,14 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackBar from '../components/base/CustomSnackBar.jsx';
-import SellerProduct from '../components/seller/SellerProduct.jsx';
+import BuyerProduct from '../components/buyer/BuyerProduct.jsx';
 import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
+import BuyerAPI from '../services/BuyerAPI.js';
 import HelperService from '../services/HelperService.js';
 import SellerAPI from '../services/SellerAPI.js';
 import useSnackStore from '../store/SnackStore.js';
 
-function SellerProductContainer() {
+function BuyerProductContainer() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [filters, setFilters] = useState({
@@ -83,7 +84,7 @@ function SellerProductContainer() {
                 }
             });
 
-            const res = await SellerAPI.getProducts(getAccessToken(), params);
+            const res = await BuyerAPI.getProducts(getAccessToken(), params);
             if (res.ok) {
                 const body = await res.json();
                 setProducts(body.content);
@@ -138,7 +139,7 @@ function SellerProductContainer() {
 
     const productsList =
         products.length > 0 ? (
-            products.map((p) => <SellerProduct key={p.id} {...p} />)
+            products.map((p) => <BuyerProduct key={p.id} {...p} />)
         ) : (
             <Box
                 sx={{
@@ -149,7 +150,7 @@ function SellerProductContainer() {
                 }}
             >
                 <Typography variant="h4" color="textSecondary">
-                    You do not have any Products.
+                    No Products to show.
                 </Typography>
             </Box>
         );
@@ -295,4 +296,4 @@ function SellerProductContainer() {
     );
 }
 
-export default SellerProductContainer;
+export default BuyerProductContainer;

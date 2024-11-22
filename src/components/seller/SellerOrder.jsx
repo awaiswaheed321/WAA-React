@@ -1,3 +1,4 @@
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -21,9 +22,7 @@ function SellerOrder(props) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const { openSnackBar } = useSnackStore();
     const navigate = useNavigate();
-    console.log("Comp:", getAccessToken())
     const handleUpdateStatus = async (newStatus) => {
-        console.log('New Status:', newStatus);
         try {
             const res = await SellerAPI.updateOrderStatus(
                 getAccessToken(),
@@ -153,6 +152,9 @@ function SellerOrder(props) {
                     <strong>Quantity:</strong> {quantity}
                 </Typography>
                 <Typography variant="body1">
+                    <strong>Price:</strong> {product.price}
+                </Typography>
+                <Typography variant="body1">
                     <strong>Total Price:</strong> ${totalPrice.toFixed(2)}
                 </Typography>
                 <Typography variant="body1">
@@ -167,14 +169,14 @@ function SellerOrder(props) {
                         onClick={handlePrevImage}
                         disabled={product.images.length <= 1}
                     >
-                        Back
+                        <ArrowBack />
                     </Button>
                     <Button
                         variant="outlined"
                         onClick={handleNextImage}
                         disabled={product.images.length <= 1}
                     >
-                        Next
+                        <ArrowForward />
                     </Button>
                 </Box>
                 <Box mt={2} display="flex" justifyContent="flex-start">

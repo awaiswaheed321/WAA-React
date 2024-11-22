@@ -10,10 +10,11 @@ import {
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CustomSnackBar from '../base/CustomSnackBar';
 
-function SellerProduct(props) {
-    const navigate = useNavigate();
+function BuyerProduct(props) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const navigate = useNavigate();
 
     const handleNextImage = (event) => {
         event.stopPropagation();
@@ -31,9 +32,9 @@ function SellerProduct(props) {
 
     return (
         <Card
-            sx={{ minWidth: 300, maxWidth: 300 }}
+            sx={{ minWidth: 300, maxWidth: 300, m: 2 }}
             onClick={() => {
-                navigate(`/dashboard/seller-products/${props.id}`);
+                navigate(`/dashboard/buyer-products/${props.id}`);
             }}
         >
             <CardMedia
@@ -77,11 +78,12 @@ function SellerProduct(props) {
                     </Button>
                 </Box>
             </CardContent>
+            <CustomSnackBar />
         </Card>
     );
 }
 
-SellerProduct.propTypes = {
+BuyerProduct.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
@@ -102,4 +104,4 @@ SellerProduct.propTypes = {
     ).isRequired,
 };
 
-export default SellerProduct;
+export default BuyerProduct;

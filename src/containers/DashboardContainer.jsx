@@ -87,6 +87,16 @@ const Dashboard = () => {
                     >
                         MarketPlace Pro
                     </Typography>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            marginRight: 2,
+                            color: 'white',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        {`${user.firstName} ${user.lastName}`}
+                    </Typography>
                     <Button
                         color="inherit"
                         sx={{ bgcolor: '#748CAB' }}
@@ -208,6 +218,34 @@ const Dashboard = () => {
                                             <ListItemText primary="Orders" />
                                         </ListItem>
                                     )}
+                                {/* Buyer View Products Container */}
+                                {user.role === UserRole.BUYER && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="buyer-products"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <CategoryRoundedIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Products" />
+                                    </ListItem>
+                                )}
+                                {/* Buyer's Orders */}
+                                {user.role === UserRole.BUYER && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="buyer-orders"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <ShoppingCartOutlinedIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Orders" />
+                                    </ListItem>
+                                )}
                             </List>
                         </Box>
                     </Drawer>

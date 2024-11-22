@@ -2,13 +2,13 @@ import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackBar from '../components/base/CustomSnackBar.jsx';
-import SellerOrder from '../components/seller/SellerOrder.jsx';
 import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
 import HelperService from '../services/HelperService.js';
-import SellerAPI from '../services/SellerAPI.js';
 import useSnackStore from '../store/SnackStore.js';
+import BuyerAPI from '../services/BuyerAPI.js';
+import BuyerOrder from '../components/buyer/BuyerOrder.jsx';
 
-function SellerOrderContainer() {
+function BuyerOrderContainer() {
     const [orders, setOrders] = useState([]);
     const { openSnackBar, resetSnackProps } = useSnackStore();
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ function SellerOrderContainer() {
 
     const fetchOrders = async () => {
         try {
-            const res = await SellerAPI.getSellerOrders(getAccessToken());
+            const res = await BuyerAPI.getBuyerOrders(getAccessToken());
             if (res.ok) {
                 const body = await res.json();
                 const sortedOrders = body.sort((a, b) => {
@@ -58,7 +58,7 @@ function SellerOrderContainer() {
     const ordersList =
         orders.length > 0 ? (
             orders.map((p) => (
-                <SellerOrder key={p.id} {...p} fetchOrders={fetchOrders} />
+                <BuyerOrder key={p.id} {...p} />
             ))
         ) : (
             <Box
@@ -92,4 +92,4 @@ function SellerOrderContainer() {
     );
 }
 
-export default SellerOrderContainer;
+export default BuyerOrderContainer;
