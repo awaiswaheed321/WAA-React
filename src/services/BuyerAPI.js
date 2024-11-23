@@ -121,6 +121,10 @@ async function addAddress(token, body) {
     );
 }
 
+async function createOrder(token, body) {
+    return await makeSecureApiCall('POST', `${ApiUrls.ORDER}`, {}, body, token);
+}
+
 export default {
     getProducts,
     getProductById,
@@ -134,4 +138,5 @@ export default {
     fetchAddresses,
     deleteAddress,
     addAddress,
+    createOrder,
 };

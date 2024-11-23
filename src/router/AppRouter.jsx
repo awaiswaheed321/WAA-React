@@ -20,6 +20,7 @@ import SellerOrderContainer from '../containers/SellerOrderContainer.jsx';
 import SellerProductContainer from '../containers/SellerProductContainer.jsx';
 import PrivateRoute from './PrivateRouter.jsx';
 import AddressContainer from '../containers/AddressContainer.jsx';
+import CategoryContainer from '../containers/CategoryContainer.jsx';
 
 export const AppRouter = createBrowserRouter([
     {
@@ -72,6 +73,14 @@ export const AppRouter = createBrowserRouter([
                 element: (
                     <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
                         <PendingSellerContainer />
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: 'categories',
+                element: (
+                    <PrivateRoute allowedRoles={[UserRole.ADMIN]}>
+                        <CategoryContainer />
                     </PrivateRoute>
                 ),
             },

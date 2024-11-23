@@ -29,7 +29,6 @@ function SellerOrder(props) {
                 id,
                 newStatus,
             );
-            console.log(res);
             if (res.ok) {
                 openSnackBar('Update Successful', 'success');
                 await HelperService.delay(2000);

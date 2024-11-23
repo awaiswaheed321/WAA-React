@@ -73,7 +73,6 @@ export default function AddressContainer() {
 
     const onSubmit = async (data) => {
         try {
-            console.log(data)
             const res = await BuyerAPI.addAddress(getAccessToken(), data);
             if (res.ok) {
                 openSnackBar('Address Added', 'success');

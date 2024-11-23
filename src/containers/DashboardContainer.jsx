@@ -7,6 +7,7 @@ import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
 import SendIcon from '@mui/icons-material/Send';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import WavingHandRoundedIcon from '@mui/icons-material/WavingHandRounded';
+import CategoryIcon from '@mui/icons-material/Category';
 import {
     AppBar,
     Box,
@@ -173,6 +174,20 @@ const Dashboard = () => {
                                             <RateReviewRoundedIcon />
                                         </ListItemIcon>
                                         <ListItemText primary="Reviews" />
+                                    </ListItem>
+                                )}
+                                {/* Admin's Categories */}
+                                {user.role === UserRole.ADMIN && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="categories"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <CategoryIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Categories" />
                                     </ListItem>
                                 )}
                                 {/* Seller's Create Product */}

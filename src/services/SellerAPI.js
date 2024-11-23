@@ -78,7 +78,6 @@ async function getSellerOrders(token) {
 }
 
 async function updateOrderStatus(token, id, status) {
-    console.log('API:', token);
     return await makeSecureApiCall(
         'PUT',
         `${ApiUrls.ORDERS}/${id}${ApiUrls.STATUS}`,
