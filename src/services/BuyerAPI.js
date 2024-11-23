@@ -111,6 +111,16 @@ async function deleteAddress(token, id) {
     );
 }
 
+async function addAddress(token, body) {
+    return await makeSecureApiCall(
+        'POST',
+        `${ApiUrls.ADDRESS}`,
+        {},
+        body,
+        token,
+    );
+}
+
 export default {
     getProducts,
     getProductById,
@@ -123,4 +133,5 @@ export default {
     removeItemFromCart,
     fetchAddresses,
     deleteAddress,
+    addAddress,
 };
