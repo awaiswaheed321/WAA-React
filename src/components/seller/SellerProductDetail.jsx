@@ -71,7 +71,7 @@ const SellerProductDetail = () => {
             const res = await SellerAPI.deleteProductById(getAccessToken(), id);
             if (res.ok) {
                 openSnackBar('Product Deleted', 'success');
-                navigate(-1);
+                navigate("/dashboard/seller-products");
             } else if (res.status === 403) {
                 await handle403();
             } else {
@@ -84,7 +84,7 @@ const SellerProductDetail = () => {
     };
 
     const handleBack = () => {
-        navigate(-1);
+        navigate("/dashboard/seller-products");
     };
 
     const handleAddStock = async () => {
