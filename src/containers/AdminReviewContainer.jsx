@@ -24,7 +24,7 @@ export default function AdminReviewContainer() {
                 deleteAllCookies();
                 navigate('/');
             } else {
-                const body = await res.body();
+                const body = await res.json();
                 openSnackBar(body.message, 'error');
             }
         } catch (error) {

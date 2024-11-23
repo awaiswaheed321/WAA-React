@@ -28,7 +28,7 @@ export default function PendingSeller(props) {
             } else if (res.status === 403) {
                 await handle403();
             } else {
-                const body = await res.body();
+                const body = await res.json();
                 openSnackBar(body.message, 'error');
             }
         } catch (error) {
@@ -46,7 +46,7 @@ export default function PendingSeller(props) {
             } else if (res.status === 403) {
                 await handle403();
             } else {
-                const body = await res.body();
+                const body = await res.json();
                 openSnackBar(body.message, 'error');
             }
         } catch (error) {

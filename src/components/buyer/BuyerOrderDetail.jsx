@@ -1,4 +1,4 @@
-import { ArrowBack, ArrowForward, Close } from '@mui/icons-material';
+import { ArrowBack, ArrowForward, Close, Print } from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -13,7 +13,9 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAccessToken } from '../../cookies/AuthCookie';
 import BuyerAPI from '../../services/BuyerAPI.js';
@@ -30,6 +32,7 @@ function BuyerOrderDetail() {
     const [reviewRating, setReviewRating] = useState(0);
     const { openSnackBar, resetSnackProps } = useSnackStore();
     const navigate = useNavigate();
+    const printRef = useRef();
 
     const fetchOrder = async () => {
         try {
@@ -73,6 +76,18 @@ function BuyerOrderDetail() {
 
     const goBack = () => {
         navigate(-1);
+    };
+
+    const handlePrint = async () => {
+        const element = printRef.current;
+        const canvas = await html2canvas(element, { scale: 2 });
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210; // A4 width in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        pdf.save('receipt.pdf');
     };
 
     if (!order) {
@@ -151,24 +166,55 @@ function BuyerOrderDetail() {
 
     return (
         <Container maxWidth="md" sx={{ mt: 4 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Button variant="contained" onClick={goBack} sx={{ bgcolor: '#748CAB' }}>
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={2}
+            >
+                <Button
+                    variant="contained"
+                    onClick={goBack}
+                    sx={{ bgcolor: '#748CAB' }}
+                >
                     Back
                 </Button>
-                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+                <Box
+                    sx={{
+                        flexGrow: 1,
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                >
                     <Typography variant="h4">Order Details</Typography>
                 </Box>
                 {status === 'PENDING' && (
-                    <Button variant="contained" color="error" onClick={cancelOrder}>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={cancelOrder}
+                    >
                         Cancel Order
                     </Button>
                 )}
 
                 {status === 'DELIVERED' && !review && (
-                    <Button variant="contained" onClick={reviewOrder} sx={{ bgcolor: '#748CAB' }}>
+                    <Button
+                        variant="contained"
+                        onClick={reviewOrder}
+                        sx={{ bgcolor: '#748CAB' }}
+                    >
                         Leave Review
                     </Button>
                 )}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handlePrint}
+                    startIcon={<Print />}
+                >
+                    Print
+                </Button>
             </Box>
 
             <Card sx={{ position: 'relative' }}>
@@ -186,45 +232,65 @@ function BuyerOrderDetail() {
                         <ArrowForward />
                     </Button>
                 </Box>
-                <CardContent>
+                <CardContent ref={printRef}>
                     <Typography variant="h5">{product.name}</Typography>
                     <Typography variant="body2" color="text.secondary">
                         {product.description}
                     </Typography>
                     <Box mt={2}>
-                        <Typography variant="body1"><strong>Category:</strong> {product.category.name}</Typography>
-                        <Typography variant="body1"><strong>Quantity:</strong> {quantity}</Typography>
-                        <Typography variant="body1"><strong>Total Price:</strong> ${totalPrice.toFixed(2)}</Typography>
-                        <Typography variant="body1"><strong>Status:</strong> {status}</Typography>
+                        <Typography variant="body1">
+                            <strong>Category:</strong> {product.category.name}
+                        </Typography>
+                        <Typography variant="body1">
+                            <strong>Quantity:</strong> {quantity}
+                        </Typography>
+                        <Typography variant="body1">
+                            <strong>Total Price:</strong> $
+                            {totalPrice.toFixed(2)}
+                        </Typography>
+                        <Typography variant="body1">
+                            <strong>Status:</strong> {status}
+                        </Typography>
                     </Box>
 
                     <Box mt={4}>
                         <Typography variant="h6">Shipping Address</Typography>
                         <Typography variant="body2">
-                            {shippingAddress.street}, {shippingAddress.city}, {shippingAddress.state}, {shippingAddress.zipCode}, {shippingAddress.country}
+                            {shippingAddress.street}, {shippingAddress.city},{' '}
+                            {shippingAddress.state}, {shippingAddress.zipCode},{' '}
+                            {shippingAddress.country}
                         </Typography>
                     </Box>
 
                     <Box mt={4}>
                         <Typography variant="h6">Billing Address</Typography>
                         <Typography variant="body2">
-                            {billingAddress.street}, {billingAddress.city}, {billingAddress.state}, {billingAddress.zipCode}, {billingAddress.country}
+                            {billingAddress.street}, {billingAddress.city},{' '}
+                            {billingAddress.state}, {billingAddress.zipCode},{' '}
+                            {billingAddress.country}
                         </Typography>
                     </Box>
 
-                    {/* Review Section */}
                     {status === 'DELIVERED' && review && (
                         <Box mt={4}>
                             <Typography variant="h6">Your Review</Typography>
-                            <Typography variant="body2">{review.comment}</Typography>
-                            <Rating name="review-rating" value={review.rating} readOnly />
+                            <Typography variant="body2">
+                                {review.comment}
+                            </Typography>
+                            <Rating
+                                name="review-rating"
+                                value={review.rating}
+                                readOnly
+                            />
                         </Box>
                     )}
                 </CardContent>
             </Card>
 
-            {/* Modal for Review */}
-            <Modal open={openReviewModal} onClose={() => setOpenReviewModal(false)}>
+            <Modal
+                open={openReviewModal}
+                onClose={() => setOpenReviewModal(false)}
+            >
                 <Box
                     sx={{
                         position: 'absolute',
@@ -255,20 +321,33 @@ function BuyerOrderDetail() {
                     <Rating
                         name="review-rating"
                         value={reviewRating}
-                        onChange={(event, newValue) => setReviewRating(newValue)}
+                        onChange={(event, newValue) =>
+                            setReviewRating(newValue)
+                        }
                         sx={{ mb: 2 }}
                     />
-                    <Stack direction="row" spacing={2} justifyContent="flex-end">
-                        <Button onClick={() => setOpenReviewModal(false)} variant="outlined" color="error">
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        justifyContent="flex-end"
+                    >
+                        <Button
+                            onClick={() => setOpenReviewModal(false)}
+                            variant="outlined"
+                            color="error"
+                        >
                             Cancel
                         </Button>
-                        <Button onClick={addReview} variant="contained">
-                            Add Review
+                        <Button
+                            onClick={addReview}
+                            variant="contained"
+                            color="success"
+                        >
+                            Submit
                         </Button>
                     </Stack>
                 </Box>
             </Modal>
-
             <CustomSnackBar />
         </Container>
     );

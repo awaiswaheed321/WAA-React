@@ -9,6 +9,8 @@ const ApiUrls = Object.freeze({
     REVIEW: '/review',
     CART: `${BASE_URL}/buyer/cart`,
     ADD: '/add',
+    REMOVE: '/remove',
+    ADDRESS: `${BASE_URL}/buyer/addresses`,
 });
 
 async function getProducts(token, params) {
@@ -75,6 +77,40 @@ async function addToCart(token, body) {
     );
 }
 
+async function getCart(token) {
+    return await makeSecureApiCall('GET', `${ApiUrls.CART}`, {}, null, token);
+}
+
+async function removeItemFromCart(token, id) {
+    return await makeSecureApiCall(
+        'DELETE',
+        `${ApiUrls.CART}/${id}${ApiUrls.REMOVE}`,
+        {},
+        null,
+        token,
+    );
+}
+
+async function fetchAddresses(token) {
+    return await makeSecureApiCall(
+        'GET',
+        `${ApiUrls.ADDRESS}`,
+        {},
+        null,
+        token,
+    );
+}
+
+async function deleteAddress(token, id) {
+    return await makeSecureApiCall(
+        'DELETE',
+        `${ApiUrls.ADDRESS}/${id}`,
+        {},
+        null,
+        token,
+    );
+}
+
 export default {
     getProducts,
     getProductById,
@@ -83,4 +119,8 @@ export default {
     cancelOrder,
     reviewOrder,
     addToCart,
+    getCart,
+    removeItemFromCart,
+    fetchAddresses,
+    deleteAddress,
 };

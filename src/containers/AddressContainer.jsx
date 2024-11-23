@@ -2,63 +2,68 @@ import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomSnackBar from '../components/base/CustomSnackBar.jsx';
-import SellerOrder from '../components/seller/SellerOrder.jsx';
+import Address from '../components/buyer/Address.jsx';
 import { deleteAllCookies, getAccessToken } from '../cookies/AuthCookie.js';
+import BuyerAPI from '../services/BuyerAPI.js';
 import HelperService from '../services/HelperService.js';
-import SellerAPI from '../services/SellerAPI.js';
 import useSnackStore from '../store/SnackStore.js';
 
-function SellerOrderContainer() {
-    const [orders, setOrders] = useState([]);
+export default function AddressContainer() {
+    const [addresses, setAddresses] = useState([]);
     const { openSnackBar, resetSnackProps } = useSnackStore();
     const navigate = useNavigate();
 
-    const OrderStatusOrder = [
-        'PENDING',
-        'SHIPPED',
-        'ON_THE_WAY',
-        'DELIVERED',
-        'CANCELLED',
-    ];
-
-    const fetchOrders = async () => {
+    const fetchAddresses = async () => {
         try {
-            const res = await SellerAPI.getSellerOrders(getAccessToken());
+            const res = await BuyerAPI.fetchAddresses(getAccessToken());
             if (res.ok) {
                 const body = await res.json();
-                const sortedOrders = body.sort((a, b) => {
-                    const statusA = OrderStatusOrder.indexOf(a.status);
-                    const statusB = OrderStatusOrder.indexOf(b.status);
-                    return statusA - statusB;
-                });
-                setOrders(sortedOrders);
+                setAddresses(body || []);
             } else if (res.status === 403) {
-                openSnackBar('Your session has expired', 'error');
-                await HelperService.delay(2000);
-                deleteAllCookies();
-                navigate('/');
+                await handle403();
             } else {
                 const body = await res.json();
                 openSnackBar(body.message, 'error');
             }
         } catch (error) {
-            console.error('Error fetching Reviews:', error);
+            console.error('Error fetching Cart:', error);
+        }
+    };
+
+    const handle403 = async () => {
+        openSnackBar('Your session has expired', 'error');
+        await HelperService.delay(2000);
+        deleteAllCookies();
+        navigate('/');
+    };
+
+    const onDelete = async (id) => {
+        try {
+            const res = await BuyerAPI.deleteAddress(getAccessToken(), id);
+            if (res.ok) {
+                openSnackBar('Item Removed', 'success');
+                await HelperService.delay(1000);
+                await fetchAddresses();
+            } else if (res.status === 403) {
+                await handle403();
+            } else {
+                const body = await res.json();
+                openSnackBar(body.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error fetching Cart:', error);
         }
     };
 
     useEffect(() => {
         resetSnackProps();
-        fetchOrders();
-        const interval = setInterval(() => {
-            fetchOrders();
-        }, 60000);
-        return () => clearInterval(interval);
+        fetchAddresses();
     }, []);
 
-    const ordersList =
-        orders.length > 0 ? (
-            orders.map((p) => (
-                <SellerOrder key={p.id} {...p} fetchOrders={fetchOrders} />
+    const addressList =
+        addresses.length > 0 ? (
+            addresses.map((p) => (
+                <Address key={p.id} address={p} onDelete={onDelete} />
             ))
         ) : (
             <Box
@@ -70,7 +75,7 @@ function SellerOrderContainer() {
                 }}
             >
                 <Typography variant="h4" color="textSecondary">
-                    No Orders available.
+                    No Address saved.
                 </Typography>
             </Box>
         );
@@ -82,14 +87,12 @@ function SellerOrderContainer() {
                 color="textSecondary"
                 sx={{ fontWeight: 'bold' }}
             >
-                Orders
+                Addresses
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={2}>
-                {ordersList}
+                {addressList}
             </Box>
             <CustomSnackBar />
         </div>
     );
 }
-
-export default SellerOrderContainer;

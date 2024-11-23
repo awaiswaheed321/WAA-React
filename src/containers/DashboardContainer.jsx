@@ -1,8 +1,10 @@
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
 import MenuIcon from '@mui/icons-material/Menu';
 import NoteAddRoundedIcon from '@mui/icons-material/NoteAddRounded';
 import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 import RateReviewRoundedIcon from '@mui/icons-material/RateReviewRounded';
+import SendIcon from '@mui/icons-material/Send';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import WavingHandRoundedIcon from '@mui/icons-material/WavingHandRounded';
 import {
@@ -213,7 +215,7 @@ const Dashboard = () => {
                                             onClick={handleDrawerItemClick}
                                         >
                                             <ListItemIcon>
-                                                <ShoppingCartOutlinedIcon />
+                                                <LocalMallIcon />
                                             </ListItemIcon>
                                             <ListItemText primary="Orders" />
                                         </ListItem>
@@ -241,9 +243,37 @@ const Dashboard = () => {
                                         onClick={handleDrawerItemClick}
                                     >
                                         <ListItemIcon>
-                                            <ShoppingCartOutlinedIcon />
+                                            <LocalMallIcon />
                                         </ListItemIcon>
                                         <ListItemText primary="Orders" />
+                                    </ListItem>
+                                )}
+                                {/* Buyer's Cart */}
+                                {user.role === UserRole.BUYER && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="cart"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <ShoppingCartOutlinedIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Cart" />
+                                    </ListItem>
+                                )}
+                                {/* Buyer's Address */}
+                                {user.role === UserRole.BUYER && (
+                                    <ListItem
+                                        button
+                                        component={Link}
+                                        to="address"
+                                        onClick={handleDrawerItemClick}
+                                    >
+                                        <ListItemIcon>
+                                            <SendIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Addresses" />
                                     </ListItem>
                                 )}
                             </List>
